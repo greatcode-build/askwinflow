@@ -282,18 +282,20 @@ export default function Home() {
         </div>
       </section>
       <footer>
-        <div className="bg-[#111111] p-5">
+        <div className="bg-[#111111]">
           <div className="flex justify-between items-center p-5">
-            <div className="flex flex-col items-center cursor-pointer">
-              <Image
-                src="/askwinflow_logo.png"
-                alt="AskWinFlow Logo"
-                width={25}
-                height={25}
-              />
-              <span className="font-semibold cursor-pointer invert">
-                AskWinFlow
-              </span>
+            <div className="flex flex-col items-start cursor-pointer">
+              <div className="flex">
+                <Image
+                  src="/askwinflow_logo.png"
+                  alt="AskWinFlow Logo"
+                  width={25}
+                  height={25}
+                />
+                <span className="font-semibold cursor-pointer invert">
+                  AskWinFlow
+                </span>
+              </div>
               <p className="invert">
                 Transforming questions,
                 <br /> ideas, and discussions
