@@ -1,8 +1,12 @@
+"use client";
+
 import { HowItWorks, keyFeatures } from "@/constants";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <main>
       <header>
@@ -24,8 +28,16 @@ export default function Home() {
                 <li>How it Works</li>
               </ul>
               <div className="flex items-center gap-4">
-                <button className="font-medium cursor-pointer">Login In</button>
-                <button className="px-4 py-2 bg-[#D01406] text-white rounded-md font-medium cursor-pointer">
+                <button
+                  onClick={() => router.push("/sign-up")}
+                  className="font-medium cursor-pointer"
+                >
+                  Login In
+                </button>
+                <button
+                  onClick={() => router.push("/sign-up")}
+                  className="px-4 py-2 bg-[#D01406] text-white rounded-md font-medium cursor-pointer"
+                >
                   Get Started
                 </button>
               </div>
@@ -138,7 +150,7 @@ export default function Home() {
           </p>
         </div>
         <div className="space-y-2 m-5 pb-5">
-          <details className="group [&amp;_summary::-webkit-details-marker]:hidden">
+          <details className="group [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3 font-medium text-gray-900 hover:bg-gray-50">
               <span>What is AskWinFlow?</span>
               <svg
@@ -165,7 +177,7 @@ export default function Home() {
               </p>
             </div>
           </details>
-          <details className="group [&amp;_summary::-webkit-details-marker]:hidden">
+          <details className="group [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3 font-medium text-gray-900 hover:bg-gray-50">
               <span>How is AskWinFlow different from chat groups?</span>
 
@@ -195,7 +207,7 @@ export default function Home() {
             </div>
           </details>
 
-          <details className="group [&amp;_summary::-webkit-details-marker]:hidden">
+          <details className="group [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3 font-medium text-gray-900 hover:bg-gray-50">
               <span> Who can use AskWinFlow?</span>
 
@@ -223,7 +235,7 @@ export default function Home() {
               </p>
             </div>
           </details>
-          <details className="group [&amp;_summary::-webkit-details-marker]:hidden">
+          <details className="group [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3 font-medium text-gray-900 hover:bg-gray-50">
               <span>Can I attach files to my questions or ideas?</span>
 
@@ -251,7 +263,7 @@ export default function Home() {
               </p>
             </div>
           </details>
-          <details className="group [&amp;_summary::-webkit-details-marker]:hidden">
+          <details className="group [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white px-4 py-3 font-medium text-gray-900 hover:bg-gray-50">
               <span>Is AskWinFlow free to use?</span>
 

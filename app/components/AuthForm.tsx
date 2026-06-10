@@ -57,7 +57,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#8B8C8C] px-4">
       <div className="w-full max-w-md bg-white shadow-md rounded-2xl p-8 flex flex-col gap-6">
         <div className="flex flex-col items-center gap-5">
           <Image

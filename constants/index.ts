@@ -57,3 +57,42 @@ export const HowItWorks: {
     image: "/frame_5.png",
   },
 ];
+
+export const interestOptions = [
+  {
+    id: "professional",
+    title: "Professional",
+    description: "Product, Design, Engineering",
+    icon: "/brief_case.png",
+  },
+  {
+    id: "educator",
+    title: "Educator",
+    description: "Product, Design, Engineering",
+    icon: "/graduation_cap.png",
+  },
+  {
+    id: "tech",
+    title: "Tech Enthusiast",
+    description: "Product, Design, Engineering",
+    icon: "/cpu.png",
+  },
+];
+
+export const usageOptions = [
+  "Ask questions and get answers",
+  "Share expertise and help others",
+  "Discover industry insights",
+  "Build my professional network",
+  "Learn from experts",
+  "Contribute to discussions",
+];
+
+export const topicsOptions = [
+  "HR Professionals",
+  "Educators Community",
+  "Frontend Developers",
+  "Product Leaders",
+  "Remote Work",
+  "AI Discussions",
+];
