@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "AskWinFlow",
   description:
     "Ask WinFlow is a structured Q&A and Knowledge-sharing platform where professionals, educators and tech enthusiasts share and refine ideas through organized discussions.",
-  icons: "/askwinflow_icon.png",
+  icons: "/askwinflow_icon.svg",
 };
 
 export default function RootLayout({

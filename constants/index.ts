@@ -32,7 +32,7 @@ export const keyFeatures: {
   },
 ];
 
-export const HowItWorks: {
+export const HowItWorksData: {
   id: number;
   title: string;
   text: string;

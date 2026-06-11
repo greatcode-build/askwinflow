@@ -83,7 +83,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/onboarding/1`,
+        redirectTo: `${window.location.origin}/feed`,
       },
     });
   };
@@ -95,8 +95,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
           <Image
             src="/askwinflow_logo.png"
             alt="AskWinFlow Logo"
-            width={40}
-            height={40}
+            width={70}
+            height={70}
           />
           <div className="flex flex-col items-center gap-2">
             <h1 className="text-2xl font-semibold">
@@ -136,7 +136,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                     onChange={handleChange}
                     value={formData.fullName}
                     placeholder="Enter your surname first"
-                    className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-red-600"
+                    className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#008080]"
                     required
                   />
                   {errors.fullName && (
@@ -163,7 +163,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 onChange={handleChange}
                 value={formData.email}
                 placeholder="Enter your email address here"
-                className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-red-600"
+                className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#008080]"
                 required
               />
               {errors.email && (
@@ -185,7 +185,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 onChange={handleChange}
                 value={formData.password}
                 placeholder="Enter a strong password"
-                className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-10 pr-10 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-red-600"
+                className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-10 pr-10 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#008080]"
                 required
               />
               {errors.password && (
@@ -206,7 +206,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 name="acceptTerms"
                 checked={formData.acceptTerms}
                 onChange={handleChange}
-                className="mt-1 border-[#D01406]"
+                className="mt-1 border-[#008080]"
                 required
               />
               {errors.acceptTerms && (
@@ -214,18 +214,19 @@ const AuthForm = ({ type }: AuthFormProps) => {
               )}
               <p className="text-xs text-gray-600 leading-5">
                 I agree to the
-                <span className="text-[#D01406]">
+                <span className="text-[#008080]">
                   {" "}
                   Terms and Conditions
                 </span>{" "}
                 and have reviewed the
-                <span className="text-[#D01406]"> Privacy Policy</span>
+                <span className="text-[#008080]"> Privacy Policy</span>
               </p>
             </div>
           ) : null}
           <button
             type="submit"
-            className="text-lg bg-[#D01406] text-white py-3 rounded-md font-semibold hover:opacity-90"
+            onClick={() => router.push("/onboarding/1")}
+            className="text-lg bg-[#008080] text-white py-3 rounded-md font-semibold hover:opacity-90"
           >
             {type === "Sign Up" ? "Create Account" : "Log In"}
           </button>
@@ -235,7 +236,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
               Already have an account?{" "}
               <Link
                 href="/sign-in"
-                className="text-xs text-[#D01406] font-bold cursor-pointer"
+                className="text-xs text-[#008080] font-bold cursor-pointer"
               >
                 Log In
               </Link>
@@ -245,7 +246,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
               Don’t have an account?
               <Link
                 href="/sign-up"
-                className="text-xs text-[#D01406] font-bold cursor-pointer"
+                className="text-xs text-[#008080] font-bold cursor-pointer"
               >
                 {" "}
                 Sign Up

@@ -14,8 +14,8 @@ const Navbar = () => {
             <Image
               src="/askwinflow_logo.png"
               alt="AskWinFlow Logo"
-              width={25}
-              height={25}
+              width={40}
+              height={40}
             />
             <span className="font-semibold cursor-pointer">AskWinFlow</span>
           </div>
@@ -34,7 +34,7 @@ const Navbar = () => {
               </button>
               <button
                 onClick={() => router.push("/sign-up")}
-                className="px-4 py-2 bg-[#D01406] text-white rounded-md font-medium cursor-pointer"
+                className="px-4 py-2 bg-[#008080] text-white rounded-md font-medium cursor-pointer"
               >
                 Get Started
               </button>
