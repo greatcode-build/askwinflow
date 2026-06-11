@@ -6,6 +6,7 @@ const Hero = () => {
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-center gap-3 mb-10">
+          <div>Hi</div>
           <Image
             src="/frame_1.png"
             alt="Community members"
