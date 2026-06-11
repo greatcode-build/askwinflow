@@ -96,3 +96,46 @@ export const topicsOptions = [
   "Remote Work",
   "AI Discussions",
 ];
+
+export const discussionsData = [
+  {
+    id: 1,
+    name: "Kelvin Park",
+    text: "Rust vs. Go for building CLI developer tools in 2026",
+    image: "/image_9.png",
+    comment: 400,
+    rating: 200,
+  },
+  {
+    id: 2,
+    name: "Kenneth Kelvin",
+    text: "Rust vs. Go for building CLI developer tools in 2026",
+    image: "/image_2.png",
+    comment: 40,
+    rating: 7,
+  },
+  {
+    id: 3,
+    name: "Kelvin",
+    text: "Rust vs. Go for building CLI developer tools in 2026",
+    image: "/image_3.png",
+    comment: 5,
+    rating: 10,
+  },
+  {
+    id: 4,
+    name: "Kenneth Kelvin",
+    text: "Rust vs. Go for building CLI developer tools in 2026",
+    image: "/image_9.png",
+    comment: 7,
+    rating: 8,
+  },
+  {
+    id: 5,
+    name: "Kelvin Park",
+    text: "Rust vs. Go for building CLI developer tools in 2026",
+    image: "/image_9.png",
+    comment: 400,
+    rating: 200,
+  },
+];

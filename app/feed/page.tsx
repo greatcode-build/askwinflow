@@ -1,9 +1,9 @@
-import { Navbar } from "../components/Navbar";
+import { Feed } from "../components/FeedNavbar";
 
 const page = () => {
   return (
     <div>
-      <Navbar />
+      <Feed />
     </div>
   );
 };
