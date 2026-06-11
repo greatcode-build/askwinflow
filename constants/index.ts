@@ -109,15 +109,15 @@ export const discussionsData = [
   {
     id: 2,
     name: "Kenneth Kelvin",
-    text: "Rust vs. Go for building CLI developer tools in 2026",
+    text: "Best practices for running async product discovery sprints?",
     image: "/image_2.png",
     comment: 40,
     rating: 7,
   },
   {
     id: 3,
-    name: "Kelvin",
-    text: "Rust vs. Go for building CLI developer tools in 2026",
+    name: "Kelly Watercary",
+    text: "How do you assess student engagement in hybrid classrooms?",
     image: "/image_3.png",
     comment: 5,
     rating: 10,
@@ -125,7 +125,7 @@ export const discussionsData = [
   {
     id: 4,
     name: "Kenneth Kelvin",
-    text: "Rust vs. Go for building CLI developer tools in 2026",
+    text: "Best practices for running async product discovery sprints?",
     image: "/image_9.png",
     comment: 7,
     rating: 8,
@@ -133,7 +133,7 @@ export const discussionsData = [
   {
     id: 5,
     name: "Kelvin Park",
-    text: "Rust vs. Go for building CLI developer tools in 2026",
+    text: "Framework for prioritizing product features with limited eng capacity",
     image: "/image_9.png",
     comment: 400,
     rating: 200,

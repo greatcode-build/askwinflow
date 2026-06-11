@@ -1,4 +1,4 @@
-import { Feed } from "../components/FeedNavbar";
+import { Feed } from "../components/Feed";
 
 const page = () => {
   return (
