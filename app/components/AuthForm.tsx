@@ -20,7 +20,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
-
+  console.log("AUTH TYPE:", type);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
 
@@ -225,7 +225,6 @@ const AuthForm = ({ type }: AuthFormProps) => {
           ) : null}
           <button
             type="submit"
-            onClick={() => router.push("/onboarding/1")}
             className="text-lg bg-[#008080] text-white py-3 rounded-md font-semibold hover:opacity-90"
           >
             {type === "Sign Up" ? "Create Account" : "Log In"}
