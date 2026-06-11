@@ -3,7 +3,7 @@ import { keyFeatures } from "@/constants";
 const Features = () => {
   return (
     <section>
-      <div className="bg-[#FFCDC233] p-4">
+      <div className="p-4">
         <div className="flex flex-col gap-8 items-center">
           <h1 className="font-bold text-3xl">Key Features</h1>
           <p className="max-w-3xl text-lg leading-8 text-[#29292B]">

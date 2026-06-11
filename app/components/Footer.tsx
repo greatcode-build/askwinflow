@@ -3,7 +3,7 @@ import Image from "next/image";
 const Footer = () => {
   return (
     <footer>
-      <div className="bg-[#111111]">
+      <div className="bg-[#313132]">
         <div className="flex justify-between items-center py-5 px-15">
           <div className="flex flex-col items-start cursor-pointer">
             <div className="flex items-center">
@@ -31,7 +31,7 @@ const Footer = () => {
               <li>How it Works</li>
             </ul>
           </div>
-          <button className="px-8 py-3 rounded-md bg-[#FFFFFF] text-[#3A3A3C]">
+          <button className="px-8 py-3 rounded-md bg-[#FFFFFF1F] text-[#FFFF] border border-[#FFFAFA]">
             Get Experts Insights
           </button>
         </div>

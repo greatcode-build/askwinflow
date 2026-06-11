@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { discussionsData } from "@/constants";
+import Link from "next/link";
 
 const Feed = () => {
   const router = useRouter();
@@ -14,19 +15,20 @@ const Feed = () => {
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
-      {/* NAVBAR */}
       <nav className="bg-[#EEEEF0]">
         <div className="max-w-7xl mx-auto px-1 h-20 flex items-center justify-between">
           <div
             className="flex items-center gap-1 cursor-pointer"
             onClick={() => router.push("/")}
           >
-            <Image
-              src="/askwinflow_logo.png"
-              alt="AskWinFlow Logo"
-              width={40}
-              height={40}
-            />
+            <Link href="/">
+              <Image
+                src="/askwinflow_logo.png"
+                alt="AskWinFlow Logo"
+                width={40}
+                height={40}
+              />
+            </Link>
             <span className="font-bold text-lg">AskWinFlow</span>
           </div>
 
@@ -58,7 +60,6 @@ const Feed = () => {
               </li>
             </ul>
 
-            {/* PROFILE */}
             <div className="relative">
               <div
                 className="flex items-center gap-2 cursor-pointer"
@@ -111,9 +112,7 @@ const Feed = () => {
         </div>
       </nav>
 
-      {/* MAIN */}
       <main className="max-w-4xl mx-auto px-4 py-8">
-        {/* SEARCH */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="flex-1 relative">
             <Image
@@ -130,7 +129,6 @@ const Feed = () => {
               className="w-full bg-white border border-[#48484A] rounded-xl py-3 pl-12 pr-12 text-black outline-none"
             />
 
-            {/* FILTER ICON */}
             <Image
               src="/faders.png"
               alt="filter"
@@ -140,7 +138,6 @@ const Feed = () => {
               onClick={() => setShowFilter((prev) => !prev)}
             />
 
-            {/* FILTER DROPDOWN */}
             {showFilter && (
               <div className="absolute right-0 top-14 w-20 bg-white border-none rounded-lg shadow-md z-50 py-2">
                 <button className="w-full px-3 py-2 text-sm flex items-center justify-between hover:bg-gray-100">
@@ -162,13 +159,11 @@ const Feed = () => {
           </button>
         </div>
 
-        {/* HEADER */}
         <div className="flex items-center gap-2 mb-6">
           <Image src="/pulse.png" alt="pulse" width={20} height={20} />
           <h2 className="text-xl">Discussions based on community ratings</h2>
         </div>
 
-        {/* POSTS */}
         <div className="space-y-4">
           {discussionsData.map((post) => (
             <div
