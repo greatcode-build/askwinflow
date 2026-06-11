@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { signUpSchema, loginSchema } from "../lib/utils";
+import { supabase } from "../lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 type AuthFormProps = {
   type: "Sign Up" | "Sign In";
@@ -17,6 +19,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     acceptTerms: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -27,11 +30,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const schema = type === "Sign Up" ? signUpSchema : loginSchema;
-
     const result = schema.safeParse(formData);
 
     if (!result.success) {
@@ -39,10 +41,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
       result.error.issues.forEach((issue) => {
         const field = issue.path[0] as string;
-
-        if (!fieldErrors[field]) {
-          fieldErrors[field] = issue.message;
-        }
+        fieldErrors[field] = issue.message;
       });
 
       setErrors(fieldErrors);
@@ -51,9 +50,42 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
     setErrors({});
 
-    console.log("valid data", result.data);
+    if (type === "Sign Up") {
+      const { error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.fullName,
+          },
+          emailRedirectTo: `${window.location.origin}/onboarding/1`,
+        },
+      });
 
-    // call Supabase or API here
+      if (!error) {
+        router.push("/check-email");
+      }
+
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (!error) {
+      router.push("/feed");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/onboarding/1`,
+      },
+    });
   };
 
   return (
@@ -78,7 +110,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
           </div>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <button className="border border-[#C4BEBE] rounded-md py-3 text-lg flex items-center justify-center gap-2 hover:bg-gray-50">
+          <button
+            onClick={handleGoogleLogin}
+            className="border border-[#C4BEBE] rounded-md py-3 text-lg flex items-center justify-center gap-2 hover:bg-gray-50"
+          >
             <Image src="/google.png" alt="Google" width={25} height={25} />
             Continue with Google
           </button>

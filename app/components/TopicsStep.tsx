@@ -2,10 +2,13 @@
 
 import { topicsOptions } from "@/constants";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ProgressBar } from "./ProgressBar";
 
 const TopicsStep = () => {
   const [selected, setSelected] = useState<string[]>([]);
+  const router = useRouter();
 
   const toggleOption = (item: string) => {
     setSelected((prev) =>
@@ -16,7 +19,8 @@ const TopicsStep = () => {
   const isSelected = (item: string) => selected.includes(item);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#8B8C8C] px-4">
+    <div className="min-h-screen flex flex-col gap-10 items-center justify-center bg-[#8B8C8C] px-4">
+      <ProgressBar step={3} />
       <div className="w-full max-w-md bg-white shadow-md rounded-2xl p-8 flex flex-col gap-6">
         <div className="text-center">
           <h1 className="text-2xl font-semibold">
@@ -45,11 +49,15 @@ const TopicsStep = () => {
         </div>
 
         <div className="flex justify-between pt-4">
-          <button className="px-4 flex text-center items-center gap-2 py-2 rounded-md text-sm">
+          <button
+            onClick={() => router.push("/onboarding/2")}
+            className="px-4 flex text-center items-center gap-2 py-2 rounded-md text-sm"
+          >
             <ArrowLeft />
             Back
           </button>
           <button
+            onClick={() => router.push("/feed")}
             disabled={selected.length === 0}
             className={`px-4 py-2 rounded-md text-sm flex text-center gap-2 items-center
               ${
@@ -59,7 +67,7 @@ const TopicsStep = () => {
               }
             `}
           >
-            Continue <ArrowRight />
+            Got to Feed <ArrowRight />
           </button>
         </div>
       </div>

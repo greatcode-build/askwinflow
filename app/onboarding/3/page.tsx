@@ -1,9 +1,9 @@
-import { Navbar } from "../components/Navbar";
+import { TopicsStep } from "@/app/components/TopicsStep";
 
 const page = () => {
   return (
     <div>
-      <Navbar />
+      <TopicsStep />;
     </div>
   );
 };

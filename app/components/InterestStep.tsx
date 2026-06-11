@@ -9,8 +9,8 @@ const InterestStep = () => {
   const [selected, setSelected] = useState("professional");
 
   return (
-    <div className="min-h-screen flex flex-col gap-5 items-center justify-center bg-[#8B8C8C] px-4">
-      <ProgressBar />
+    <div className="min-h-screen flex flex-col gap-10 items-center justify-center bg-[#8B8C8C] px-4">
+      <ProgressBar step={1} />
       <div className="w-full max-w-md bg-white shadow-md rounded-2xl p-8 flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-2xl font-semibold">

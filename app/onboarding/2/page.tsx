@@ -1,9 +1,9 @@
-import { Navbar } from "../components/Navbar";
+import { UsageStep } from "@/app/components/UsageStep";
 
 const page = () => {
   return (
     <div>
-      <Navbar />
+      <UsageStep />;
     </div>
   );
 };
