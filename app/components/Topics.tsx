@@ -10,18 +10,31 @@ import { getProfile } from "@/services/profile.service";
 
 const Topics = () => {
   const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleFinish = async () => {
-    await updateProfile({
-      topics: selected,
-    });
+    setError(null);
+    setLoading(true);
+
+    const res = await updateProfile({ topics: selected });
+
+    if (!res || !res.success) {
+      setError(res?.message || "Failed to save topics");
+      setLoading(false);
+      return;
+    }
 
     const profile = await getProfile();
 
-    if (profile.data.user.profile_completed) {
-      router.push("/feed");
+    if (!profile || !profile.success) {
+      setError(profile?.message || "Failed to fetch profile");
+      setLoading(false);
+      return;
     }
+
+    router.push("/feed");
   };
   const toggleOption = (item: string) => {
     setSelected((prev) =>
@@ -69,19 +82,22 @@ const Topics = () => {
             <ArrowLeft />
             Back
           </button>
-          <button
-            onClick={handleFinish}
-            disabled={selected.length === 0}
-            className={`px-4 py-2 rounded-md text-sm flex text-center gap-2 items-center
+          <div className="flex items-center gap-2">
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <button
+              onClick={handleFinish}
+              disabled={selected.length === 0 || loading}
+              className={`px-4 py-2 rounded-md text-sm flex text-center gap-2 items-center
               ${
-                selected.length === 0
+                selected.length === 0 || loading
                   ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                   : "bg-[#008080] text-white"
               }
             `}
-          >
-            Got to Feed <ArrowRight />
-          </button>
+            >
+              {loading ? "Saving..." : "Got to Feed"} <ArrowRight />
+            </button>
+          </div>
         </div>
       </div>
     </div>

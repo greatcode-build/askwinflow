@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
 import { setToken } from "@/app/lib/auth";
@@ -8,31 +8,53 @@ import { getProfile } from "@/services/profile.service";
 
 export default function CallbackPage() {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const handleCallback = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      if (!session) {
-        router.push("/sign-in");
-        return;
-      }
+        if (!session) {
+          router.push("/sign-in");
+          return;
+        }
 
-      setToken(session.access_token);
+        setToken(session.access_token);
 
-      const profile = await getProfile();
+        const profile = await getProfile();
 
-      if (profile.data.user.profile_completed) {
-        router.push("/feed");
-      } else {
-        router.push("/onboarding/persona");
+        if (!profile || !profile.success) {
+          setError(profile?.message || "Failed to fetch profile");
+          return;
+        }
+
+        if (profile.data.user.profile_completed) {
+          router.push("/feed");
+        } else {
+          router.push("/onboarding/persona");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("An unexpected error occurred during sign-in");
       }
     };
 
     handleCallback();
   }, [router]);
 
-  return <div>Signing you in...</div>;
+  if (error)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        {error}
+      </div>
+    );
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      Signing you in...
+    </div>
+  );
 }

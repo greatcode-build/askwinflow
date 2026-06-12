@@ -6,12 +6,16 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { discussionsData } from "@/constants";
 import Link from "next/link";
+import { logout } from "@/services/auth.service";
+import { clearToken } from "@/app/lib/auth";
 
 const Feed = () => {
   const router = useRouter();
 
   const [showMenu, setShowMenu] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
++  const [logoutLoading, setLogoutLoading] = useState(false);
++  const [logoutError, setLogoutError] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
@@ -82,7 +86,7 @@ const Feed = () => {
               </div>
 
               {showMenu && (
-                <div className="absolute right-0 top-12 w-28 bg-white rounded-lg shadow-md z-50 py-1">
+                <div className="absolute right-0 top-12 w-40 bg-white rounded-lg shadow-md z-50 py-1">
                   <button
                     onClick={() => router.push("/profile")}
                     className="w-full px-3 py-2 flex items-center gap-3 text-sm hover:bg-gray-100"
@@ -96,15 +100,32 @@ const Feed = () => {
                     <span>Profile</span>
                   </button>
 
-                  <button className="w-full px-3 py-2 flex items-center gap-3 text-sm hover:bg-gray-100 text-[#3A3A3C]">
+                  <button
+                    onClick={async () => {
+                      setLogoutError(null);
+                      setLogoutLoading(true);
+
+                      await logout();
+                      clearToken();
+                      router.push("/sign-in");
+                    }}
+                    disabled={logoutLoading}
+                    className="w-full px-3 py-2 flex items-center gap-3 text-sm hover:bg-gray-100 text-[#3A3A3C] disabled:cursor-not-allowed disabled:opacity-70"
+                  >
                     <Image
                       src="/sign_out.png"
                       alt="logout"
                       width={14}
                       height={14}
                     />
-                    <span>Logout</span>
+                    <span>{logoutLoading ? "Logging out..." : "Logout"}</span>
                   </button>
+
+                  {logoutError && (
+                    <div className="px-3 py-2 text-xs text-red-600">
+                      {logoutError}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

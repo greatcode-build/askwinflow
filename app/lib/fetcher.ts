@@ -4,7 +4,7 @@ import { API_URL } from "./api";
 export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = getToken();
 
-  return fetch(`${API_URL}${endpoint}`, {
+  const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -12,4 +12,17 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
       ...options.headers,
     },
   });
+
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    return {
+      success: false,
+      status: res.status,
+      message: json?.message || res.statusText,
+      data: json,
+    };
+  }
+
+  return { success: true, status: res.status, data: json };
 };

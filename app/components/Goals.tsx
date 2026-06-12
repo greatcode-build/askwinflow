@@ -9,12 +9,21 @@ import { updateProfile } from "@/services/profile.service";
 
 const Goals = () => {
   const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleNext = async () => {
-    await updateProfile({
-      goals: selected,
-    });
+    setError(null);
+    setLoading(true);
+
+    const res = await updateProfile({ goals: selected });
+
+    if (!res || !res.success) {
+      setError(res?.message || "Failed to save goals");
+      setLoading(false);
+      return;
+    }
 
     router.push("/onboarding/topics");
   };
@@ -65,19 +74,22 @@ const Goals = () => {
             <ArrowLeft />
             Back
           </button>
-          <button
-            onClick={handleNext}
-            disabled={selected.length === 0}
-            className={`px-4 py-2 rounded-md text-sm flex text-center gap-2 items-center
+          <div className="flex items-center gap-2">
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <button
+              onClick={handleNext}
+              disabled={selected.length === 0 || loading}
+              className={`px-4 py-2 rounded-md text-sm flex text-center gap-2 items-center
               ${
-                selected.length === 0
+                selected.length === 0 || loading
                   ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                   : "bg-[#008080] text-white"
               }
             `}
-          >
-            Continue <ArrowRight />
-          </button>
+            >
+              {loading ? "Saving..." : "Continue"} <ArrowRight />
+            </button>
+          </div>
         </div>
       </div>
     </div>

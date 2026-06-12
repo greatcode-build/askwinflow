@@ -12,7 +12,18 @@ export const login = async (email: string, password: string) => {
     }),
   });
 
-  return res.json();
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    return {
+      success: false,
+      status: res.status,
+      message: json?.message || res.statusText,
+      data: json,
+    };
+  }
+
+  return { success: true, status: res.status, data: json };
 };
 
 export const register = async (payload: {
@@ -27,12 +38,38 @@ export const register = async (payload: {
     },
     body: JSON.stringify(payload),
   });
-  console.log(res);
-  return res.json();
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    return {
+      success: false,
+      status: res.status,
+      message: json?.message || res.statusText,
+      data: json,
+    };
+  }
+
+  return { success: true, status: res.status, data: json };
 };
 
 export const logout = async () => {
-  return fetch(`${API_URL}/auth/logout`, {
+  const res = await fetch(`${API_URL}/auth/logout`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
+
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    return {
+      success: false,
+      status: res.status,
+      message: json?.message || res.statusText,
+      data: json,
+    };
+  }
+
+  return { success: true, status: res.status, data: json };
 };

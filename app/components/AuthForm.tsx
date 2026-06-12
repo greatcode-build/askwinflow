@@ -21,6 +21,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formError, setFormError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -33,8 +35,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
+      setFormError(null);
+      setLoading(true);
+
       if (type === "Sign Up") {
         const res = await register({
           full_name: formData.full_name,
@@ -42,7 +46,11 @@ const AuthForm = ({ type }: AuthFormProps) => {
           password: formData.password,
         });
 
-        if (!res.success) return;
+        if (!res.success) {
+          setFormError(res.message || "Registration failed");
+          setLoading(false);
+          return;
+        }
 
         router.push("/verify-email");
         return;
@@ -50,15 +58,29 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
       const res = await login(formData.email, formData.password);
 
-      if (!res.success) return;
+      if (!res.success) {
+        setFormError(res.message || "Login failed");
+        setLoading(false);
+        return;
+      }
 
       const token = res.data.token;
 
-      if (!token) return;
+      if (!token) {
+        setFormError("Missing token from server response");
+        setLoading(false);
+        return;
+      }
 
       setToken(token);
 
       const profile = await getProfile();
+
+      if (!profile || !profile.success) {
+        setFormError(profile?.message || "Failed to fetch profile");
+        setLoading(false);
+        return;
+      }
 
       if (profile.data.user.profile_completed) {
         router.push("/feed");
@@ -67,6 +89,9 @@ const AuthForm = ({ type }: AuthFormProps) => {
       }
     } catch (err) {
       console.error(err);
+      setFormError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,6 +134,9 @@ const AuthForm = ({ type }: AuthFormProps) => {
             <span>Or</span>
             <div className="h-px bg-[#C4BEBE] flex-1" />
           </div>
+          {formError && (
+            <p className="text-sm text-red-500 text-center">{formError}</p>
+          )}
           <div className="flex flex-col gap-1">
             {type === "Sign Up" ? (
               <>
@@ -188,9 +216,18 @@ const AuthForm = ({ type }: AuthFormProps) => {
           </div>
           <button
             type="submit"
-            className="text-lg bg-[#008080] text-white py-3 rounded-md font-semibold hover:opacity-90"
+            disabled={loading}
+            className={`text-lg py-3 rounded-md font-semibold hover:opacity-90 ${
+              loading
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-[#008080] text-white"
+            }`}
           >
-            {type === "Sign Up" ? "Create Account" : "Log In"}
+            {loading
+              ? "Please wait..."
+              : type === "Sign Up"
+                ? "Create Account"
+                : "Log In"}
           </button>
 
           {type === "Sign Up" ? (

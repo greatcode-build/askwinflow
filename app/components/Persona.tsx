@@ -9,14 +9,22 @@ import { useRouter } from "next/navigation";
 
 const Persona = () => {
   const [selected, setSelected] = useState("professional");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSelect = async (id: string) => {
+    setError(null);
     setSelected(id);
+    setLoading(true);
 
-    await updateProfile({
-      persona: id,
-    });
+    const res = await updateProfile({ persona: id });
+
+    if (!res || !res.success) {
+      setError(res?.message || "Failed to update persona");
+      setLoading(false);
+      return;
+    }
 
     router.push("/onboarding/goals");
   };
@@ -37,7 +45,7 @@ const Persona = () => {
             return (
               <div
                 key={item.id}
-                onClick={() => handleSelect(item.id)}
+                onClick={() => !loading && handleSelect(item.id)}
                 className={`flex items-center gap-3 p-4 border rounded-md cursor-pointer
                 ${
                   isActive
@@ -60,6 +68,8 @@ const Persona = () => {
             );
           })}
         </div>
+        {loading && <p className="text-sm text-center">Saving...</p>}
+        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
       </div>
     </div>
   );
