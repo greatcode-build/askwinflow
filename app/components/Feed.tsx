@@ -14,8 +14,8 @@ const Feed = () => {
 
   const [showMenu, setShowMenu] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
-+  const [logoutLoading, setLogoutLoading] = useState(false);
-+  const [logoutError, setLogoutError] = useState<string | null>(null);
+  const [logoutLoading, setLogoutLoading] = useState(false);
+  const [logoutError, setLogoutError] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
