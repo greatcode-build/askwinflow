@@ -16,7 +16,7 @@ export const login = async (email: string, password: string) => {
 };
 
 export const register = async (payload: {
-  fullName: string;
+  full_name: string;
   email: string;
   password: string;
 }) => {
@@ -27,7 +27,7 @@ export const register = async (payload: {
     },
     body: JSON.stringify(payload),
   });
-
+  console.log(res);
   return res.json();
 };
 

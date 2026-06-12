@@ -88,14 +88,14 @@ export const usageOptions = [
   "Contribute to discussions",
 ];
 
-export const topicsOptions = [
-  "HR Professionals",
-  "Educators Community",
-  "Frontend Developers",
-  "Product Leaders",
-  "Remote Work",
-  "AI Discussions",
-];
+// export const topicsOptions = [
+//   "HR Professionals",
+//   "Educators Community",
+//   "Frontend Developers",
+//   "Product Leaders",
+//   "Remote Work",
+//   "AI Discussions",
+// ];
 
 export const discussionsData = [
   {
@@ -138,4 +138,13 @@ export const discussionsData = [
     comment: 400,
     rating: 200,
   },
+];
+
+export const topicsOptions = [
+  { id: "1", label: "HR Professionals" },
+  { id: "2", label: "Educators Community" },
+  { id: "3", label: "Frontend Developers" },
+  { id: "4", label: "Product Leaders" },
+  { id: "5", label: "Remote Work" },
+  { id: "6", label: "AI Discussions" },
 ];

@@ -46,17 +46,17 @@ const Topics = () => {
         <div className="flex flex-col gap-3">
           {topicsOptions.map((item) => (
             <button
-              key={item}
-              onClick={() => toggleOption(item)}
+              key={item.id}
+              onClick={() => toggleOption(item.label)}
               className={`p-3 border border-[#6E6E6F] rounded-md text-sm transition text-left
         ${
-          isSelected(item)
+          isSelected(item.label)
             ? "bg-[#FFCDC266] border-[#6E6E6F]"
             : "bg-white border-gray-300"
         }
       `}
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </div>

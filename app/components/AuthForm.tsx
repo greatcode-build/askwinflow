@@ -15,7 +15,7 @@ type AuthFormProps = {
 
 const AuthForm = ({ type }: AuthFormProps) => {
   const [formData, setFormData] = useState({
-    fullName: "",
+    full_name: "",
     email: "",
     password: "",
   });
@@ -37,7 +37,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     try {
       if (type === "Sign Up") {
         const res = await register({
-          fullName: formData.fullName,
+          full_name: formData.full_name,
           email: formData.email,
           password: formData.password,
         });
@@ -119,9 +119,9 @@ const AuthForm = ({ type }: AuthFormProps) => {
                   </span>
                   <input
                     type="text"
-                    name="fullName"
+                    name="full_name"
                     onChange={handleChange}
-                    value={formData.fullName}
+                    value={formData.full_name}
                     placeholder="Enter your surname first"
                     className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#008080]"
                     required
