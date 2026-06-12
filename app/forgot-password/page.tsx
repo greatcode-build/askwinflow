@@ -1,7 +1,12 @@
+import { Suspense } from "react";
 import { ForgotPassword } from "../components/ForgotPassword";
 
 const page = () => {
-  return <ForgotPassword />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ForgotPassword />
+    </Suspense>
+  );
 };
 
 export default page;
