@@ -1,9 +1,9 @@
-import { UsageStep } from "@/app/components/UsageStep";
+import { Goals } from "@/app/components/Goals";
 
 const page = () => {
   return (
     <div>
-      <UsageStep />;
+      <Goals />
     </div>
   );
 };

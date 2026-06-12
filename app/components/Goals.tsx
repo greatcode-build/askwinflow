@@ -5,10 +5,19 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ProgressBar } from "./ProgressBar";
+import { updateProfile } from "@/services/profile.service";
 
-const UsageStep = () => {
+const Goals = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const router = useRouter();
+
+  const handleNext = async () => {
+    await updateProfile({
+      goals: selected,
+    });
+
+    router.push("/onboarding/topics");
+  };
 
   const toggleOption = (item: string) => {
     setSelected((prev) =>
@@ -50,14 +59,14 @@ const UsageStep = () => {
 
         <div className="flex justify-between pt-4">
           <button
-            onClick={() => router.push("/onboarding/1")}
+            onClick={() => router.push("/onboarding/persona")}
             className="px-4 flex text-center items-center gap-2 py-2 rounded-md text-sm"
           >
             <ArrowLeft />
             Back
           </button>
           <button
-            onClick={() => router.push("/onboarding/3")}
+            onClick={handleNext}
             disabled={selected.length === 0}
             className={`px-4 py-2 rounded-md text-sm flex text-center gap-2 items-center
               ${
@@ -75,4 +84,4 @@ const UsageStep = () => {
   );
 };
 
-export { UsageStep };
+export { Goals };

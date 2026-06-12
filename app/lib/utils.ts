@@ -24,10 +24,6 @@ export const signUpSchema = z.object({
     .regex(/[0-9]/, {
       message: "Password must contain a number",
     }),
-
-  acceptTerms: z.boolean().refine((val) => val === true, {
-    message: "You must accept the Terms and Conditions",
-  }),
 });
 
 export const loginSchema = z.object({

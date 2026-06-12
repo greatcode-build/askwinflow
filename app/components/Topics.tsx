@@ -5,11 +5,24 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ProgressBar } from "./ProgressBar";
+import { updateProfile } from "@/services/profile.service";
+import { getProfile } from "@/services/profile.service";
 
-const TopicsStep = () => {
+const Topics = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const router = useRouter();
 
+  const handleFinish = async () => {
+    await updateProfile({
+      topics: selected,
+    });
+
+    const profile = await getProfile();
+
+    if (profile.data.user.profile_completed) {
+      router.push("/feed");
+    }
+  };
   const toggleOption = (item: string) => {
     setSelected((prev) =>
       prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item],
@@ -50,14 +63,14 @@ const TopicsStep = () => {
 
         <div className="flex justify-between pt-4">
           <button
-            onClick={() => router.push("/onboarding/2")}
+            onClick={() => router.push("/onboarding/goals")}
             className="px-4 flex text-center items-center gap-2 py-2 rounded-md text-sm"
           >
             <ArrowLeft />
             Back
           </button>
           <button
-            onClick={() => router.push("/feed")}
+            onClick={handleFinish}
             disabled={selected.length === 0}
             className={`px-4 py-2 rounded-md text-sm flex text-center gap-2 items-center
               ${
@@ -75,4 +88,4 @@ const TopicsStep = () => {
   );
 };
 
-export { TopicsStep };
+export { Topics };

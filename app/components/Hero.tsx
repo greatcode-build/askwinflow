@@ -1,7 +1,11 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
+  const router = useRouter();
   return (
     <section className="mt-10 py-20 relative bg-[url('/home.png')]">
       <div className="max-w-7xl mx-auto px-6">
@@ -115,7 +119,10 @@ const Hero = () => {
             <br /> attachments, and community-driven ratings.
           </p>
 
-          <button className="flex items-center gap-2 bg-[#008080] text-white px-6 py-3 rounded-md font-medium">
+          <button
+            onClick={() => router.push("/sign-up")}
+            className="flex items-center gap-2 bg-[#008080] text-white px-6 py-3 rounded-md font-medium cursor-pointer"
+          >
             Join A Community Now
             <ArrowRight />
           </button>

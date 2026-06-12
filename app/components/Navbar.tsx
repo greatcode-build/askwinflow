@@ -27,7 +27,7 @@ const Navbar = () => {
             </ul>
             <div className="flex items-center gap-4">
               <button
-                onClick={() => router.push("/sign-up")}
+                onClick={() => router.push("/sign-in")}
                 className="font-medium cursor-pointer"
               >
                 Login In

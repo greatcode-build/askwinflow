@@ -1,9 +1,9 @@
-import { TopicsStep } from "@/app/components/TopicsStep";
+import { Persona } from "@/app/components/Persona";
 
 const page = () => {
   return (
     <div>
-      <TopicsStep />;
+      <Persona />
     </div>
   );
 };

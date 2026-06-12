@@ -3,9 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { signUpSchema, loginSchema } from "../lib/utils";
-import { supabase } from "../lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { login, register } from "@/services/auth.service";
+import { setToken } from "../lib/auth";
+import { getProfile } from "@/services/profile.service";
+import { signInWithGoogle } from "@/services/google-auth.service";
 
 type AuthFormProps = {
   type: "Sign Up" | "Sign In";
@@ -16,11 +18,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
     fullName: "",
     email: "",
     password: "",
-    acceptTerms: false,
   });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
-  console.log("AUTH TYPE:", type);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
 
@@ -30,62 +31,47 @@ const AuthForm = ({ type }: AuthFormProps) => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const schema = type === "Sign Up" ? signUpSchema : loginSchema;
-    const result = schema.safeParse(formData);
+    try {
+      if (type === "Sign Up") {
+        const res = await register({
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+        });
 
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
+        if (!res.success) return;
 
-      result.error.issues.forEach((issue) => {
-        const field = issue.path[0] as string;
-        fieldErrors[field] = issue.message;
-      });
-
-      setErrors(fieldErrors);
-      return;
-    }
-
-    setErrors({});
-
-    if (type === "Sign Up") {
-      const { error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            full_name: formData.fullName,
-          },
-          emailRedirectTo: `${window.location.origin}/onboarding/1`,
-        },
-      });
-
-      if (!error) {
-        router.push("/check-email");
+        router.push("/verify-email");
+        return;
       }
 
-      return;
-    }
+      const res = await login(formData.email, formData.password);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: formData.email,
-      password: formData.password,
-    });
+      if (!res.success) return;
 
-    if (!error) {
-      router.push("/feed");
+      const token = res.data.token;
+
+      if (!token) return;
+
+      setToken(token);
+
+      const profile = await getProfile();
+
+      if (profile.data.user.profile_completed) {
+        router.push("/feed");
+      } else {
+        router.push("/onboarding/persona");
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
   const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/feed`,
-      },
-    });
+    await signInWithGoogle();
   };
 
   return (
@@ -111,6 +97,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <button
+            type="button"
             onClick={handleGoogleLogin}
             className="border border-[#C4BEBE] rounded-md py-3 text-lg flex items-center justify-center gap-2 hover:bg-gray-50"
           >
@@ -199,30 +186,6 @@ const AuthForm = ({ type }: AuthFormProps) => {
               </button>
             </div>
           </div>
-          {type === "Sign Up" ? (
-            <div className="flex items-start gap-2">
-              <input
-                type="checkbox"
-                name="acceptTerms"
-                checked={formData.acceptTerms}
-                onChange={handleChange}
-                className="mt-1 border-[#008080]"
-                required
-              />
-              {errors.acceptTerms && (
-                <p className="text-sm text-red-500">{errors.acceptTerms}</p>
-              )}
-              <p className="text-xs text-gray-600 leading-5">
-                I agree to the
-                <span className="text-[#008080]">
-                  {" "}
-                  Terms and Conditions
-                </span>{" "}
-                and have reviewed the
-                <span className="text-[#008080]"> Privacy Policy</span>
-              </p>
-            </div>
-          ) : null}
           <button
             type="submit"
             className="text-lg bg-[#008080] text-white py-3 rounded-md font-semibold hover:opacity-90"
