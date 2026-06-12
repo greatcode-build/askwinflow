@@ -20,12 +20,18 @@ const AuthForm = ({ type }: AuthFormProps) => {
     password: "",
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === "password" || name === "email") {
+      setPasswordError(null);
+      setFormError(null);
+    }
 
     setFormData((prev) => ({
       ...prev,
@@ -37,6 +43,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     e.preventDefault();
     try {
       setFormError(null);
+      setPasswordError(null);
       setLoading(true);
 
       if (type === "Sign Up") {
@@ -59,7 +66,12 @@ const AuthForm = ({ type }: AuthFormProps) => {
       const res = await login(formData.email, formData.password);
 
       if (!res.success) {
-        setFormError(res.message || "Login failed");
+        const message = res.message || "Login failed";
+        if (message.toLowerCase().includes("password")) {
+          setPasswordError("Incorrect password");
+        } else {
+          setFormError(message);
+        }
         setLoading(false);
         return;
       }
@@ -205,6 +217,29 @@ const AuthForm = ({ type }: AuthFormProps) => {
               />
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password}</p>
+              )}
+              {passwordError && (
+                <div className="mt-2 space-y-1">
+                  <p className="text-sm text-red-500">{passwordError}</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const email = formData.email.trim();
+                      if (!email) {
+                        setFormError(
+                          "Enter your email address to reset your password.",
+                        );
+                        return;
+                      }
+                      router.push(
+                        `/forgot-password?email=${encodeURIComponent(email)}`,
+                      );
+                    }}
+                    className="text-sm font-bold text-[#008080] hover:underline"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
               )}
               <button
                 type="button"

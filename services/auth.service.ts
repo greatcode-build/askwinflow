@@ -73,3 +73,54 @@ export const logout = async () => {
 
   return { success: true, status: res.status, data: json };
 };
+
+export const sendPasswordResetEmail = async (email: string) => {
+  const res = await fetch(`${API_URL}/auth/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    return {
+      success: false,
+      status: res.status,
+      message: json?.message || res.statusText,
+      data: json,
+    };
+  }
+
+  return { success: true, status: res.status, data: json };
+};
+
+export const resetPassword = async (payload: {
+  email?: string;
+  password: string;
+  confirmPassword: string;
+  token?: string | null;
+}) => {
+  const res = await fetch(`${API_URL}/auth/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    return {
+      success: false,
+      status: res.status,
+      message: json?.message || res.statusText,
+      data: json,
+    };
+  }
+
+  return { success: true, status: res.status, data: json };
+};
