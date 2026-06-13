@@ -23,6 +23,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
   const [errors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,7 +224,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 <Image src="/lock_key.png" alt="user" width={20} height={20} />
               </span>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 onChange={handleChange}
                 value={formData.password}
@@ -259,9 +260,16 @@ const AuthForm = ({ type }: AuthFormProps) => {
               )}
               <button
                 type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                <Image src="/eye.png" alt="user" width={20} height={20} />
+                <Image
+                  src="/eye.png"
+                  alt="Toggle password visibility"
+                  width={20}
+                  height={20}
+                />
               </button>
             </div>
           </div>

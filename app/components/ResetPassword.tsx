@@ -15,6 +15,8 @@ const ResetPassword = () => {
     password: "",
     confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -94,33 +96,65 @@ const ResetPassword = () => {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-lg font-medium">New Password</label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, password: e.target.value }))
-              }
-              placeholder="Enter a new password"
-              className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-4 pr-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#008080]"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, password: e.target.value }))
+                }
+                placeholder="Enter a new password"
+                className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-4 pr-10 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#008080]"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                <img
+                  src="/eye.png"
+                  alt="Toggle password visibility"
+                  className="h-5 w-5"
+                />
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-1">
             <label className="text-lg font-medium">Confirm Password</label>
-            <input
-              type="password"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  confirmPassword: e.target.value,
-                }))
-              }
-              placeholder="Confirm your new password"
-              className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-4 pr-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#008080]"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    confirmPassword: e.target.value,
+                  }))
+                }
+                placeholder="Confirm your new password"
+                className="text-[#696868] w-full border border-[#C4BEBE] rounded-md pl-4 pr-10 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#008080]"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                aria-label={
+                  showConfirmPassword
+                    ? "Hide confirm password"
+                    : "Show confirm password"
+                }
+              >
+                <img
+                  src="/eye.png"
+                  alt="Toggle password visibility"
+                  className="h-5 w-5"
+                />
+              </button>
+            </div>
           </div>
 
           {error && <p className="text-sm text-red-500">{error}</p>}
