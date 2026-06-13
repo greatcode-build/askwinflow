@@ -21,10 +21,10 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="w-[150px] bg-[#FFFFFF] p-2 rounded-xl border border-[#B4B4B6] absolute top-[13%] right-37">
+        <div className="w-37.5 bg-[#FFFFFF] p-2 rounded-xl border border-[#B4B4B6] absolute top-[13%] right-37">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1">
-              <span className="bg-[#EFFF1033] text-[#A3A303] border border-[#A3A303] text-[9px] px-1 py-[3px] rounded-md">
+              <span className="bg-[#EFFF1033] text-[#A3A303] border border-[#A3A303] text-[9px] px-1 py-0.75 rounded-md">
                 Tech
               </span>
 
@@ -69,10 +69,10 @@ const Hero = () => {
             <span className="text-[#A10F05]">Lasting Knowledge</span>
           </h1>
           <div className="absolute top-[53%] left-40 -translate-x-1/2">
-            <div className="w-[150px] bg-[#FFFFFF] p-2 rounded-xl border border-[#B4B4B6]">
+            <div className="w-37.5 bg-[#FFFFFF] p-2 rounded-xl border border-[#B4B4B6]">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1">
-                  <span className="bg-[#635DFF66] text-[#050F79] border border-[#050F79] text-[9px] px-1 py-[3px] rounded-md">
+                  <span className="bg-[#635DFF66] text-[#050F79] border border-[#050F79] text-[9px] px-1 py-0.75 rounded-md">
                     Edu
                   </span>
 

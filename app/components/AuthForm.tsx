@@ -59,7 +59,9 @@ const AuthForm = ({ type }: AuthFormProps) => {
           return;
         }
 
-        router.push("/verify-email");
+        router.push(
+          `/verify-email?email=${encodeURIComponent(formData.email)}`,
+        );
         return;
       }
 
@@ -108,7 +110,18 @@ const AuthForm = ({ type }: AuthFormProps) => {
   };
 
   const handleGoogleLogin = async () => {
-    await signInWithGoogle();
+    setFormError(null);
+    setPasswordError(null);
+    setLoading(true);
+
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      console.error(err);
+      setFormError("Unable to sign in with Google. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -136,7 +149,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="border border-[#C4BEBE] rounded-md py-3 text-lg flex items-center justify-center gap-2 hover:bg-gray-50"
+            disabled={loading}
+            className={`border border-[#C4BEBE] rounded-md py-3 text-lg flex items-center justify-center gap-2 ${
+              loading ? "cursor-not-allowed opacity-70" : "hover:bg-gray-50"
+            }`}
           >
             <Image src="/google.png" alt="Google" width={25} height={25} />
             Continue with Google
