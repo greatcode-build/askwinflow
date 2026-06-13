@@ -197,7 +197,7 @@ const Feed = () => {
                 </span>
 
                 <div className="flex items-center gap-1 text-sm text-gray-700">
-                  <Image src="/clock.png" alt="clock" width={14} height={14} />
+                  <Image src="/Clock.png" alt="clock" width={14} height={14} />
                   <span>3 days ago</span>
                 </div>
               </div>

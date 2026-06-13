@@ -29,7 +29,7 @@ const Hero = () => {
               </span>
 
               <div className="flex items-center gap-1 text-[9px] text-gray-700">
-                <Image src="/clock.png" alt="clock" width={9} height={9} />
+                <Image src="/Clock.png" alt="clock" width={9} height={9} />
                 <span>3 days</span>
               </div>
             </div>
@@ -77,7 +77,7 @@ const Hero = () => {
                   </span>
 
                   <div className="flex items-center gap-1 text-[9px] text-gray-700">
-                    <Image src="/clock.png" alt="clock" width={9} height={9} />
+                    <Image src="/Clock.png" alt="clock" width={9} height={9} />
                     <span>3 days</span>
                   </div>
                 </div>
