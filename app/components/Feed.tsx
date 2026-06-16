@@ -105,9 +105,30 @@ const Feed = () => {
                       setLogoutError(null);
                       setLogoutLoading(true);
 
-                      await logout();
-                      clearToken();
-                      router.push("/sign-in");
+                      try {
+                        const res = await logout();
+
+                        if (!res || !res.success) {
+                          if (res?.status === 401 || res?.status === 403) {
+                            clearToken();
+                            router.push("/sign-in");
+                            return;
+                          }
+
+                          setLogoutError(res?.message || "Logout failed");
+                          return;
+                        }
+
+                        clearToken();
+                        router.push("/sign-in");
+                      } catch (err) {
+                        console.error(err);
+                        setLogoutError(
+                          "An unexpected error occurred during logout",
+                        );
+                      } finally {
+                        setLogoutLoading(false);
+                      }
                     }}
                     disabled={logoutLoading}
                     className="w-full px-3 py-2 flex items-center gap-3 text-sm hover:bg-gray-100 text-[#3A3A3C] disabled:cursor-not-allowed disabled:opacity-70"

@@ -4,48 +4,34 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
 import { setToken } from "@/app/lib/auth";
-import { getProfile } from "@/services/profile.service";
+import { getProfile, isProfileCompleted } from "@/services/profile.service";
 
 export default function CallbackPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const finishGoogleLogin = async () => {
-      try {
-        await supabase.auth.getSession();
+    const run = async () => {
+      const { data } = await supabase.auth.getSession();
 
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+      const session = data.session;
 
-        if (!session) {
-          router.replace("/sign-in");
-          return;
-        }
-
-        setToken(session.access_token);
-
-        const profile = await getProfile();
-
-        if (!profile?.success) {
-          router.replace("/sign-in");
-          return;
-        }
-
-        const user = profile.data.user;
-
-        if (user.profile_completed) {
-          router.replace("/feed");
-        } else {
-          router.replace("/onboarding/persona");
-        }
-      } catch (error) {
-        console.error(error);
+      if (!session) {
         router.replace("/sign-in");
+        return;
+      }
+
+      await setToken(session.access_token);
+
+      const profile = await getProfile();
+
+      if (isProfileCompleted(profile)) {
+        router.replace("/feed");
+      } else {
+        router.replace("/onboarding/persona");
       }
     };
 
-    finishGoogleLogin();
+    run();
   }, [router]);
 
   return (

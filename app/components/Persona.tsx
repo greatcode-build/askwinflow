@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { interestOptions } from "@/constants";
 import { ProgressBar } from "./ProgressBar";
-import { updateProfile } from "@/services/profile.service";
+import {
+  updateProfile,
+  getProfile,
+  isProfileCompleted,
+} from "@/services/profile.service";
 import { useRouter } from "next/navigation";
 
 const Persona = () => {
@@ -12,6 +16,7 @@ const Persona = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [checkingProfile, setCheckingProfile] = useState(true);
 
   const handleSelect = async (id: string) => {
     setError(null);
@@ -28,6 +33,32 @@ const Persona = () => {
 
     router.push("/onboarding/goals");
   };
+
+  useEffect(() => {
+    const checkProfile = async () => {
+      try {
+        const profile = await getProfile();
+        if (profile?.success && isProfileCompleted(profile)) {
+          router.push("/feed");
+          return;
+        }
+      } catch (err) {
+        console.error("Failed to check profile completion:", err);
+      } finally {
+        setCheckingProfile(false);
+      }
+    };
+
+    checkProfile();
+  }, [router]);
+
+  if (checkingProfile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Checking onboarding status...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col gap-10 items-center justify-center bg-[#8B8C8C] px-4">

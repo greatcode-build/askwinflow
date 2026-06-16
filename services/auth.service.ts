@@ -1,3 +1,4 @@
+import { apiFetch } from "@/app/lib/fetcher";
 import { buildApiUrl } from "@/app/lib/api";
 import { getToken } from "@/app/lib/auth";
 
@@ -66,15 +67,23 @@ export const register = async (payload: {
 export const logout = async () => {
   const token = getToken();
 
-  const res = await fetch(buildApiUrl("auth/logout"), {
+  if (!token) {
+    return {
+      success: false,
+      status: 401,
+      message: "No active session found",
+      data: null,
+    };
+  }
+
+  return apiFetch("auth/logout", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify({}),
   });
-
-  return res.json();
 };
 
 export const sendPasswordResetEmail = async (email: string) => {

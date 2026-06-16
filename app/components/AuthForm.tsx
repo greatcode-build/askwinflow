@@ -6,7 +6,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login, register } from "@/services/auth.service";
 import { setToken } from "../lib/auth";
-import { getProfile } from "@/services/profile.service";
+import {
+  getProfile,
+  getProfileUser,
+  isProfileCompleted,
+} from "@/services/profile.service";
 import { signInWithGoogle } from "@/services/google-auth.service";
 
 type AuthFormProps = {
@@ -55,7 +59,12 @@ const AuthForm = ({ type }: AuthFormProps) => {
         });
 
         if (!res.success) {
-          setFormError(res.message || "Registration failed");
+          setFormError(
+            res.message ||
+              (res.status === 409
+                ? "Email already exists. Try signing in instead."
+                : "Registration failed."),
+          );
           setLoading(false);
           return;
         }
@@ -79,10 +88,18 @@ const AuthForm = ({ type }: AuthFormProps) => {
         return;
       }
 
-      const token = res.data.token;
+      const token =
+        res.token ||
+        res.data?.token ||
+        res.data?.data?.token ||
+        res.data?.access_token ||
+        res.data?.data?.access_token ||
+        null;
 
       if (!token) {
-        setFormError("Missing token from server response");
+        setFormError(
+          "Missing token from server response. Please verify your login credentials.",
+        );
         setLoading(false);
         return;
       }
@@ -90,14 +107,30 @@ const AuthForm = ({ type }: AuthFormProps) => {
       setToken(token);
 
       const profile = await getProfile();
+      const profileUser = getProfileUser(profile);
 
-      if (!profile || !profile.success) {
+      let user = profileUser || res.data?.user || res.data?.data?.user || null;
+
+      if ((!profile || !profile.success) && !user) {
         setFormError(profile?.message || "Failed to fetch profile");
         setLoading(false);
         return;
       }
 
-      if (profile.data.user.profile_completed) {
+      if (!user && profile && profile.success) {
+        user = profileUser;
+      }
+
+      if (!user) {
+        setFormError("Unable to retrieve user profile");
+        setLoading(false);
+        return;
+      }
+
+      const profileCompleted =
+        isProfileCompleted(profile) || Boolean(user.profile_completed);
+
+      if (profileCompleted) {
         router.push("/feed");
       } else {
         router.push("/onboarding/persona");
