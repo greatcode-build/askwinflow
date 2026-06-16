@@ -1,7 +1,7 @@
-import { API_URL } from "@/app/lib/api";
+import { buildApiUrl } from "@/app/lib/api";
 
 export const getGoals = async () => {
-  const res = await fetch(`${API_URL}/users/goals`);
+  const res = await fetch(buildApiUrl("users/goals"));
   const json = await res.json().catch(() => null);
 
   if (!res.ok) {
@@ -17,7 +17,7 @@ export const getGoals = async () => {
 };
 
 export const getTopics = async () => {
-  const res = await fetch(`${API_URL}/users/topics`);
+  const res = await fetch(buildApiUrl("users/topics"));
   const json = await res.json().catch(() => null);
 
   if (!res.ok) {

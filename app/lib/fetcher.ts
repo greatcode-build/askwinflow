@@ -1,10 +1,10 @@
 import { getToken } from "./auth";
-import { API_URL } from "./api";
+import { buildApiUrl } from "./api";
 
 export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = getToken();
 
-  const res = await fetch(`${API_URL}${endpoint}`, {
+  const res = await fetch(buildApiUrl(endpoint), {
     ...options,
     headers: {
       "Content-Type": "application/json",

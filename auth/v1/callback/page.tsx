@@ -31,7 +31,14 @@ export default function CallbackPage() {
           return;
         }
 
-        if (profile.data.user.profile_completed) {
+        const user = profile.data?.user ?? profile.data;
+
+        if (!user || typeof user.profile_completed !== "boolean") {
+          setError("Unable to determine profile completion status.");
+          return;
+        }
+
+        if (user.profile_completed) {
           router.push("/feed");
         } else {
           router.push("/onboarding/persona");

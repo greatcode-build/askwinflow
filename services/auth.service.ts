@@ -1,7 +1,8 @@
-import { API_URL } from "@/app/lib/api";
+import { buildApiUrl } from "@/app/lib/api";
+import { getToken } from "@/app/lib/auth";
 
 export const login = async (email: string, password: string) => {
-  const res = await fetch(`${API_URL}/auth/login`, {
+  const res = await fetch(buildApiUrl("auth/login"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +24,17 @@ export const login = async (email: string, password: string) => {
     };
   }
 
-  return { success: true, status: res.status, data: json };
+  return {
+    success: true,
+    status: res.status,
+    data: json,
+    token:
+      json?.token ||
+      json?.data?.token ||
+      json?.access_token ||
+      json?.data?.access_token ||
+      null,
+  };
 };
 
 export const register = async (payload: {
@@ -31,7 +42,7 @@ export const register = async (payload: {
   email: string;
   password: string;
 }) => {
-  const res = await fetch(`${API_URL}/auth/register`, {
+  const res = await fetch(buildApiUrl("auth/register"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -53,29 +64,21 @@ export const register = async (payload: {
 };
 
 export const logout = async () => {
-  const res = await fetch(`${API_URL}/auth/logout`, {
+  const token = getToken();
+
+  const res = await fetch(buildApiUrl("auth/logout"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   });
 
-  const json = await res.json().catch(() => null);
-
-  if (!res.ok) {
-    return {
-      success: false,
-      status: res.status,
-      message: json?.message || res.statusText,
-      data: json,
-    };
-  }
-
-  return { success: true, status: res.status, data: json };
+  return res.json();
 };
 
 export const sendPasswordResetEmail = async (email: string) => {
-  const res = await fetch(`${API_URL}/auth/forgot-password`, {
+  const res = await fetch(buildApiUrl("auth/forgot-password"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -98,7 +101,7 @@ export const sendPasswordResetEmail = async (email: string) => {
 };
 
 export const resendVerificationEmail = async (email: string) => {
-  const res = await fetch(`${API_URL}/auth/resend-verification`, {
+  const res = await fetch(buildApiUrl("auth/resend-verification"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -126,7 +129,7 @@ export const resetPassword = async (payload: {
   confirmPassword: string;
   token?: string | null;
 }) => {
-  const res = await fetch(`${API_URL}/auth/reset-password`, {
+  const res = await fetch(buildApiUrl("auth/reset-password"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
