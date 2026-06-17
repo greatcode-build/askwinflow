@@ -3,11 +3,9 @@ import { VerifyEmail } from "../components/VerifyEmail";
 
 const page = () => {
   return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <VerifyEmail />
-      </Suspense>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmail />
+    </Suspense>
   );
 };
 

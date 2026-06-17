@@ -1,41 +1,20 @@
 import { apiFetch } from "@/app/lib/fetcher";
-import { buildApiUrl } from "@/app/lib/api";
 import { getToken } from "@/app/lib/auth";
 
 export const login = async (email: string, password: string) => {
-  const res = await fetch(buildApiUrl("auth/login"), {
+  const res = await apiFetch("auth/login", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
+    body: JSON.stringify({ email, password }),
   });
 
-  const json = await res.json().catch(() => null);
+  if (!res.success) return res;
 
-  if (!res.ok) {
-    return {
-      success: false,
-      status: res.status,
-      message: json?.message || res.statusText,
-      data: json,
-    };
-  }
+  const token =
+    res.data?.token || res.data?.data?.token || res.data?.access_token || null;
 
-  return {
-    success: true,
-    status: res.status,
-    data: json,
-    token:
-      json?.token ||
-      json?.data?.token ||
-      json?.access_token ||
-      json?.data?.access_token ||
-      null,
-  };
+  const user = res.data?.user || res.data?.data?.user || null;
+
+  return { ...res, token, user };
 };
 
 export const register = async (payload: {
@@ -43,25 +22,24 @@ export const register = async (payload: {
   email: string;
   password: string;
 }) => {
-  const res = await fetch(buildApiUrl("auth/register"), {
+  return apiFetch("auth/register", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(payload),
   });
-  const json = await res.json().catch(() => null);
+};
 
-  if (!res.ok) {
-    return {
-      success: false,
-      status: res.status,
-      message: json?.message || res.statusText,
-      data: json,
-    };
-  }
+export const verifyEmail = async (token: string) => {
+  return apiFetch("auth/verify-email", {
+    method: "POST",
+    body: JSON.stringify({ token }),
+  });
+};
 
-  return { success: true, status: res.status, data: json };
+export const resendVerificationEmail = async (email: string) => {
+  return apiFetch("auth/resend-verification", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
 };
 
 export const logout = async () => {
@@ -71,6 +49,7 @@ export const logout = async () => {
     return {
       success: false,
       status: 401,
+      code: "UNAUTHORIZED",
       message: "No active session found",
       data: null,
     };
@@ -78,84 +57,39 @@ export const logout = async () => {
 
   return apiFetch("auth/logout", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
     body: JSON.stringify({}),
   });
 };
 
 export const sendPasswordResetEmail = async (email: string) => {
-  const res = await fetch(buildApiUrl("auth/forgot-password"), {
+  return apiFetch("auth/forgot-password", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ email }),
   });
-
-  const json = await res.json().catch(() => null);
-
-  if (!res.ok) {
-    return {
-      success: false,
-      status: res.status,
-      message: json?.message || res.statusText,
-      data: json,
-    };
-  }
-
-  return { success: true, status: res.status, data: json };
-};
-
-export const resendVerificationEmail = async (email: string) => {
-  const res = await fetch(buildApiUrl("auth/resend-verification"), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
-
-  const json = await res.json().catch(() => null);
-
-  if (!res.ok) {
-    return {
-      success: false,
-      status: res.status,
-      message: json?.message || res.statusText,
-      data: json,
-    };
-  }
-
-  return { success: true, status: res.status, data: json };
 };
 
 export const resetPassword = async (payload: {
-  email?: string;
+  token: string;
   password: string;
   confirmPassword: string;
-  token?: string | null;
 }) => {
-  const res = await fetch(buildApiUrl("auth/reset-password"), {
+  return apiFetch("auth/reset-password", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(payload),
   });
+};
 
-  const json = await res.json().catch(() => null);
+export const startGoogleAuth = async () => {
+  const res = await apiFetch("auth/google", {
+    method: "GET",
+  });
 
-  if (!res.ok) {
-    return {
-      success: false,
-      status: res.status,
-      message: json?.message || res.statusText,
-      data: json,
-    };
-  }
+  if (!res.success) return res;
 
-  return { success: true, status: res.status, data: json };
+  const url = res.data?.url || res.data?.data?.url;
+
+  return {
+    ...res,
+    url,
+  };
 };

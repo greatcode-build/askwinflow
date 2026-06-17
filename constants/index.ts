@@ -60,10 +60,10 @@ export const HowItWorksData: {
 
 export const interestOptions = [
   {
-    id: "professional",
-    title: "Professional",
+    id: "tech_enthusiast",
+    title: "Tech Enthusiast",
     description: "Product, Design, Engineering",
-    icon: "/brief_case.png",
+    icon: "/cpu.png",
   },
   {
     id: "educator",
@@ -78,24 +78,6 @@ export const interestOptions = [
     icon: "/cpu.png",
   },
 ];
-
-export const usageOptions = [
-  "Ask questions and get answers",
-  "Share expertise and help others",
-  "Discover industry insights",
-  "Build my professional network",
-  "Learn from experts",
-  "Contribute to discussions",
-];
-
-// export const topicsOptions = [
-//   "HR Professionals",
-//   "Educators Community",
-//   "Frontend Developers",
-//   "Product Leaders",
-//   "Remote Work",
-//   "AI Discussions",
-// ];
 
 export const discussionsData = [
   {
@@ -138,13 +120,4 @@ export const discussionsData = [
     comment: 400,
     rating: 200,
   },
-];
-
-export const topicsOptions = [
-  { id: "1", label: "HR Professionals" },
-  { id: "2", label: "Educators Community" },
-  { id: "3", label: "Frontend Developers" },
-  { id: "4", label: "Product Leaders" },
-  { id: "5", label: "Remote Work" },
-  { id: "6", label: "AI Discussions" },
 ];

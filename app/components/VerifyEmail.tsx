@@ -1,83 +1,104 @@
 "use client";
 
-import { Mail } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { resendVerificationEmail } from "@/services/auth.service";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { resendVerificationEmail, verifyEmail } from "@/services/auth.service";
+import { setToken } from "@/app/lib/auth";
 
-const VerifyEmail = () => {
+export const VerifyEmail = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") ?? "";
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  const email = searchParams.get("email") || "";
+  const tokenFromQuery = searchParams.get("token");
+
+  const [message, setMessage] = useState(
+    "Please check your email and click the verification link.",
+  );
+  const [error, setError] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+
+  useEffect(() => {
+    const runVerification = async () => {
+      let token = tokenFromQuery;
+
+      if (!token && typeof window !== "undefined") {
+        const hashParams = new URLSearchParams(
+          window.location.hash.replace("#", ""),
+        );
+
+        token =
+          hashParams.get("token") ||
+          hashParams.get("access_token") ||
+          hashParams.get("confirmation_token");
+      }
+
+      if (!token) return;
+
+      setMessage("Verifying your email...");
+      setError(null);
+
+      const res = await verifyEmail(token);
+
+      if (!res.success) {
+        setError(res.message || "Unable to verify email.");
+        return;
+      }
+
+      const authToken = res.data?.token || res.data?.access_token;
+
+      if (authToken) {
+        setToken(authToken);
+      }
+
+      router.replace("/onboarding/persona");
+    };
+
+    runVerification();
+  }, [router, tokenFromQuery]);
 
   const handleResend = async () => {
-    setErrorMessage(null);
-    setStatusMessage(null);
-
     if (!email) {
-      setErrorMessage(
-        "Unable to resend verification email without your address.",
-      );
+      setError("Email address is missing. Please go back and sign up again.");
       return;
     }
 
-    setLoading(true);
+    setError(null);
+    setResending(true);
+
     const res = await resendVerificationEmail(email);
-    setLoading(false);
+
+    setResending(false);
 
     if (!res.success) {
-      setErrorMessage(res.message || "Failed to resend verification email.");
+      setError(res.message || "Unable to resend verification email.");
       return;
     }
 
-    setStatusMessage("Verification email resent. Please check your inbox.");
+    setMessage("Verification link resent. Please check your email.");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#8B8C8C] px-4 py-10">
-      <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-[#D9D9D9] p-10 text-center">
-        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#E6FFFE] text-[#008080] mb-8">
-          <Mail size={40} />
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#8B8C8C] px-4">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-[#D9D9D9] p-8 text-center">
+        <h1 className="text-3xl font-semibold text-[#0F292A]">
+          Verify your email
+        </h1>
 
-        <h2 className="text-3xl font-semibold text-[#0F292A] mb-4">
-          Check your Inbox!
-        </h2>
+        <p className="mt-4 text-sm text-[#4A4A4A]">{message}</p>
 
-        <p className="text-base leading-7 text-[#4A4A4A] max-w-2xl mx-auto mb-4">
-          A verification email has been sent to your registered email address.
-        </p>
+        {email && <p className="mt-2 text-sm font-medium">{email}</p>}
 
-        <p className="text-sm leading-7 text-[#4A4A4A] max-w-2xl mx-auto mb-6">
-          To activate your AskWinFlow account, click the verification link in
-          the email. Once verified, you will be able to join discussions, share
-          insights, and discover knowledge from professionals across various
-          industries.
-        </p>
+        {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
 
-        <p className="text-sm leading-7 text-[#6F6F6F] max-w-2xl mx-auto mb-4">
-          Didn’t receive the email? Check your spam folder or
-          <button
-            type="button"
-            onClick={handleResend}
-            disabled={loading}
-            className="ml-1 font-bold text-[#008080] hover:underline disabled:text-gray-400 disabled:cursor-not-allowed"
-          >
-            resend verification email.
-          </button>
-        </p>
-
-        {statusMessage && (
-          <p className="mt-4 text-sm text-teal-700">{statusMessage}</p>
-        )}
-        {errorMessage && (
-          <p className="mt-4 text-sm text-red-500">{errorMessage}</p>
-        )}
+        <button
+          onClick={handleResend}
+          disabled={resending}
+          className="mt-6 w-full bg-[#008080] text-white rounded-md py-3 font-semibold disabled:bg-gray-300 disabled:text-gray-600"
+        >
+          {resending ? "Sending..." : "Resend verification link"}
+        </button>
       </div>
     </div>
   );
 };
-
-export { VerifyEmail };

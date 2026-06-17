@@ -1,64 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { interestOptions } from "@/constants";
 import { ProgressBar } from "./ProgressBar";
-import {
-  updateProfile,
-  getProfile,
-  isProfileCompleted,
-} from "@/services/profile.service";
+import { updateProfile } from "@/services/profile.service";
 import { useRouter } from "next/navigation";
 
 const Persona = () => {
-  const [selected, setSelected] = useState("professional");
-  const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState("");
+  const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
   const router = useRouter();
-  const [checkingProfile, setCheckingProfile] = useState(true);
 
   const handleSelect = async (id: string) => {
     setError(null);
     setSelected(id);
-    setLoading(true);
+    setLoadingId(id);
 
     const res = await updateProfile({ persona: id });
 
-    if (!res || !res.success) {
-      setError(res?.message || "Failed to update persona");
-      setLoading(false);
+    setLoadingId(null);
+
+    if (!res.success) {
+      setError(res.message || "Failed to update persona.");
       return;
     }
 
     router.push("/onboarding/goals");
   };
-
-  useEffect(() => {
-    const checkProfile = async () => {
-      try {
-        const profile = await getProfile();
-        if (profile?.success && isProfileCompleted(profile)) {
-          router.push("/feed");
-          return;
-        }
-      } catch (err) {
-        console.error("Failed to check profile completion:", err);
-      } finally {
-        setCheckingProfile(false);
-      }
-    };
-
-    checkProfile();
-  }, [router]);
-
-  if (checkingProfile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Checking onboarding status...
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col gap-10 items-center justify-center bg-[#8B8C8C] px-4">
@@ -72,17 +43,20 @@ const Persona = () => {
         <div className="flex flex-col gap-3">
           {interestOptions.map((item) => {
             const isActive = selected === item.id;
+            const isLoading = loadingId === item.id;
 
             return (
-              <div
+              <button
+                type="button"
                 key={item.id}
-                onClick={() => !loading && handleSelect(item.id)}
-                className={`flex items-center gap-3 p-4 border rounded-md cursor-pointer
-                ${
-                  isActive
-                    ? "border-[#008080] bg-[#FFCDC266]"
-                    : "border-gray-200"
-                }`}
+                onClick={() => handleSelect(item.id)}
+                disabled={Boolean(loadingId)}
+                className={`flex items-center gap-3 p-4 border rounded-md text-left cursor-pointer disabled:opacity-70
+                  ${
+                    isActive
+                      ? "border-[#008080] bg-[#FFCDC266]"
+                      : "border-gray-200"
+                  }`}
               >
                 <Image
                   src={item.icon}
@@ -93,13 +67,15 @@ const Persona = () => {
 
                 <div>
                   <h2>{item.title}</h2>
-                  <p>{item.description}</p>
+                  <p className="text-sm text-gray-600">
+                    {isLoading ? "Saving..." : item.description}
+                  </p>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
-        {loading && <p className="text-sm text-center">Saving...</p>}
+
         {error && <p className="text-sm text-red-500 text-center">{error}</p>}
       </div>
     </div>

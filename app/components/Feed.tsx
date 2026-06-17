@@ -6,8 +6,10 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { discussionsData } from "@/constants";
 import Link from "next/link";
+import { useEffect } from "react";
 import { logout } from "@/services/auth.service";
-import { clearToken } from "@/app/lib/auth";
+import { clearAuthTokens, getToken } from "@/app/lib/auth";
+import { saveTokensFromUrlHash } from "@/app/lib/googleAuth";
 
 const Feed = () => {
   const router = useRouter();
@@ -16,6 +18,15 @@ const Feed = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedFromGoogle = saveTokensFromUrlHash();
+    const token = getToken();
+
+    if (!savedFromGoogle && !token) {
+      router.replace("/sign-in");
+    }
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
@@ -108,24 +119,22 @@ const Feed = () => {
                       try {
                         const res = await logout();
 
-                        if (!res || !res.success) {
-                          if (res?.status === 401 || res?.status === 403) {
-                            clearToken();
-                            router.push("/sign-in");
-                            return;
-                          }
+                        clearAuthTokens();
 
-                          setLogoutError(res?.message || "Logout failed");
+                        if (
+                          !res.success &&
+                          res.status !== 401 &&
+                          res.status !== 403
+                        ) {
+                          setLogoutError(res.message || "Logout failed");
                           return;
                         }
 
-                        clearToken();
-                        router.push("/sign-in");
+                        router.replace("/sign-in");
                       } catch (err) {
                         console.error(err);
-                        setLogoutError(
-                          "An unexpected error occurred during logout",
-                        );
+                        clearAuthTokens();
+                        router.replace("/sign-in");
                       } finally {
                         setLogoutLoading(false);
                       }

@@ -1,40 +1,100 @@
 import { getToken } from "./auth";
 import { buildApiUrl } from "./api";
 
+const ERROR_MESSAGES: Record<string, string> = {
+  VALIDATION_ERROR: "Please check your details and try again.",
+  EMAIL_ALREADY_EXISTS:
+    "An account with this email already exists. Log in instead.",
+  INVALID_CREDENTIALS: "Incorrect email or password.",
+  EMAIL_NOT_VERIFIED: "Please verify your email before continuing.",
+  VERIFICATION_LINK_EXPIRED:
+    "This verification link has expired. Request a new one.",
+  INVALID_VERIFICATION_LINK:
+    "This verification link is invalid or already used.",
+  PROFILE_INCOMPLETE: "Please complete your profile before continuing.",
+  UNAUTHORIZED: "Your session has expired. Please log in again.",
+  GOOGLE_ACCOUNT_NO_PASSWORD:
+    "This account uses Google Sign-In. Sign in with Google instead.",
+  RESET_TOKEN_INVALID: "This reset link is invalid. Request a new one.",
+  RESET_TOKEN_EXPIRED:
+    "This reset link has expired. Reset links are valid for 1 hour.",
+  RATE_LIMIT_EXCEEDED: "Too many attempts. Please wait a few minutes.",
+  SERVER_ERROR: "Something went wrong on our end. Please try again.",
+};
+
+const headersFromInit = (h?: HeadersInit) => {
+  if (!h) return {} as Record<string, string>;
+
+  if (h instanceof Headers) {
+    const obj: Record<string, string> = {};
+    h.forEach((v, k) => (obj[k] = v));
+    return obj;
+  }
+
+  if (Array.isArray(h)) {
+    return Object.fromEntries(h as [string, string][]);
+  }
+
+  return h as Record<string, string>;
+};
+
 export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = getToken();
+  const incomingHeaders = headersFromInit(options.headers);
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...(options.headers as Record<string, string>),
+    ...incomingHeaders,
   };
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const res = await fetch(buildApiUrl(endpoint), {
-    ...options,
-    headers,
-  });
+  const url = endpoint.startsWith("http") ? endpoint : buildApiUrl(endpoint);
 
-  // Read text then attempt to parse JSON to preserve raw body on parse errors
+  let res: Response;
+
+  try {
+    res = await fetch(url, {
+      ...options,
+      headers,
+    });
+  } catch (err: any) {
+    return {
+      success: false,
+      status: 0,
+      code: "NETWORK_ERROR",
+      message: err?.message || "Network error",
+      data: null,
+    };
+  }
+
   const text = await res.text().catch(() => "");
   let json: any = null;
+
   try {
     json = text ? JSON.parse(text) : null;
-  } catch (err) {
-    // keep json as null and preserve raw text in data
+  } catch {
+    json = null;
   }
 
   if (!res.ok) {
+    const code = json?.error?.code || json?.code || "SERVER_ERROR";
+    const backendMessage = json?.error?.message || json?.message;
+
     return {
       success: false,
       status: res.status,
-      message: json?.message || text || res.statusText,
+      code,
+      message: backendMessage || ERROR_MESSAGES[code] || text || res.statusText,
       data: json ?? text,
     };
   }
 
-  return { success: true, status: res.status, data: json ?? text };
+  return {
+    success: true,
+    status: res.status,
+    data: json?.data ?? json ?? text,
+  };
 };
