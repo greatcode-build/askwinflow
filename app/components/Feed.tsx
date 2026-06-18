@@ -90,7 +90,7 @@ const Feed = () => {
                 onClick={() => setShowMenu((prev) => !prev)}
               >
                 <Image
-                  src="/image_9.png"
+                  src="/profile-image.png"
                   alt="profile"
                   width={40}
                   height={40}
