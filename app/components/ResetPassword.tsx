@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassword } from "@/services/auth.service";
+import Image from "next/image";
 
 export const ResetPassword = () => {
   const router = useRouter();
@@ -12,6 +13,9 @@ export const ResetPassword = () => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,38 +78,101 @@ export const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#8B8C8C] px-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-[#D9D9D9] p-8">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-semibold text-[#0F292A]">
+    <div className="flex min-h-screen items-center justify-center bg-[#8B8C8C] px-4 py-8">
+      <div className="w-full max-w-md rounded-3xl border border-[#D9D9D9] bg-white p-6 shadow-xl sm:p-8">
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-semibold text-[#0F292A] sm:text-3xl">
             Reset Password
           </h1>
-          <p className="text-sm text-[#4A4A4A] mt-2">
+
+          <p className="mt-2 text-sm text-[#4A4A4A]">
             Enter your new password below
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">New Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter new password"
-              className="w-full border border-[#C4BEBE] rounded-md px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#008080]"
-            />
+            <label className="text-sm font-medium text-[#29292B]">
+              New Password
+            </label>
+
+            <div className="relative">
+              <Image
+                src="/lock_key.png"
+                alt="Password"
+                width={20}
+                height={20}
+                className="absolute left-4 top-1/2 -translate-y-1/2"
+              />
+
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter new password"
+                className="w-full rounded-md border border-[#C4BEBE] py-3 pl-11 pr-12 text-sm outline-none focus:ring-1 focus:ring-[#008080]"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-4 top-1/2 -translate-y-1/2"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                <Image
+                  src={showPassword ? "/eye-off.svg" : "/eye.svg"}
+                  alt={showPassword ? "Hide password" : "Show password"}
+                  width={20}
+                  height={20}
+                />
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm new password"
-              className="w-full border border-[#C4BEBE] rounded-md px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#008080]"
-            />
+            <label className="text-sm font-medium text-[#29292B]">
+              Confirm Password
+            </label>
+
+            <div className="relative">
+              <Image
+                src="/lock_key.png"
+                alt="Confirm Password"
+                width={20}
+                height={20}
+                className="absolute left-4 top-1/2 -translate-y-1/2"
+              />
+
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                className="w-full rounded-md border border-[#C4BEBE] py-3 pl-11 pr-12 text-sm outline-none focus:ring-1 focus:ring-[#008080]"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-4 top-1/2 -translate-y-1/2"
+                aria-label={
+                  showConfirmPassword
+                    ? "Hide confirm password"
+                    : "Show confirm password"
+                }
+              >
+                <Image
+                  src={showConfirmPassword ? "/eye-off.svg" : "/eye.svg"}
+                  alt={
+                    showConfirmPassword
+                      ? "Hide confirm password"
+                      : "Show confirm password"
+                  }
+                  width={20}
+                  height={20}
+                />
+              </button>
+            </div>
           </div>
 
           {error && <p className="text-sm text-red-500">{error}</p>}
@@ -113,7 +180,7 @@ export const ResetPassword = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#008080] text-white rounded-md py-3 font-semibold disabled:bg-gray-300 disabled:text-gray-600"
+            className="w-full rounded-md bg-[#008080] py-3 font-semibold text-white transition hover:bg-[#006666] disabled:bg-gray-300 disabled:text-gray-600"
           >
             {loading ? "Resetting..." : "Reset Password"}
           </button>
@@ -121,19 +188,19 @@ export const ResetPassword = () => {
       </div>
 
       {showSuccessModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center px-4">
-          <div className="bg-white w-full max-w-sm rounded-2xl p-6 text-center shadow-xl">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
             <h2 className="text-2xl font-semibold text-[#0F292A]">
               Password reset successful
             </h2>
 
-            <p className="text-sm text-gray-600 mt-3">
+            <p className="mt-3 text-sm text-gray-600">
               You can now sign in with your new password.
             </p>
 
             <button
               onClick={() => router.replace("/sign-in")}
-              className="mt-6 w-full bg-[#008080] text-white rounded-md py-3 font-semibold"
+              className="mt-6 w-full rounded-md bg-[#008080] py-3 font-semibold text-white"
             >
               Go to Sign In
             </button>
