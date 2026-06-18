@@ -2,7 +2,7 @@ import { apiFetch } from "@/app/lib/fetcher";
 
 export type UpdateProfilePayload = {
   full_name?: string;
-  persona?: string;
+  role?: string;
   goals?: string[];
   topics?: string[];
   avatar_url?: string;

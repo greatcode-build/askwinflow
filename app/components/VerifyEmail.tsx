@@ -51,7 +51,7 @@ export const VerifyEmail = () => {
         setToken(authToken);
       }
 
-      router.replace("/onboarding/persona");
+      router.replace("/onboarding/role");
     };
 
     runVerification();

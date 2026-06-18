@@ -10,7 +10,7 @@ export const redirectAuthenticatedUser = async (
     if (isUserOnboarded(fallbackUser)) {
       router.replace("/feed");
     } else {
-      router.replace("/onboarding/persona");
+      router.replace("/onboarding/role");
     }
 
     return;
@@ -28,6 +28,6 @@ export const redirectAuthenticatedUser = async (
   if (isUserOnboarded(user)) {
     router.replace("/feed");
   } else {
-    router.replace("/onboarding/persona");
+    router.replace("/onboarding/role");
   }
 };

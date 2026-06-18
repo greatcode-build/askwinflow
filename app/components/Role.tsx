@@ -7,7 +7,7 @@ import { ProgressBar } from "./ProgressBar";
 import { updateProfile } from "@/services/profile.service";
 import { useRouter } from "next/navigation";
 
-const Persona = () => {
+const Role = () => {
   const [selected, setSelected] = useState("");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +19,7 @@ const Persona = () => {
     setSelected(id);
     setLoadingId(id);
 
-    const res = await updateProfile({ persona: id });
+    const res = await updateProfile({ role: id });
 
     setLoadingId(null);
 
@@ -37,7 +37,7 @@ const Persona = () => {
 
       <div className="w-full max-w-md bg-white shadow-md rounded-2xl p-8 flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-2xl font-semibold">Select your Persona</h1>
+          <h1 className="text-2xl font-semibold">Select your Role</h1>
         </div>
 
         <div className="flex flex-col gap-3">
@@ -82,4 +82,4 @@ const Persona = () => {
   );
 };
 
-export { Persona };
+export { Role };

@@ -16,7 +16,7 @@ const getUserFromProfileResponse = (res: any) => {
 const hasCompletedOnboarding = (user: any) => {
   if (!user) return false;
 
-  const hasPersona = Boolean(user.persona);
+  const hasRole = Boolean(user.role);
 
   const hasGoals = Array.isArray(user.goals) && user.goals.length > 0;
 
@@ -26,7 +26,7 @@ const hasCompletedOnboarding = (user: any) => {
     user.profile_completed ||
     user.onboarding_completed ||
     user.skipped_onboarding ||
-    (hasPersona && hasGoals && hasTopics),
+    (hasRole && hasGoals && hasTopics),
   );
 };
 
@@ -48,7 +48,7 @@ export const OnboardingCallback = () => {
       const profileRes = await getProfile();
 
       if (!profileRes.success) {
-        router.replace("/onboarding/persona");
+        router.replace("/onboarding/role");
         return;
       }
 
@@ -59,7 +59,7 @@ export const OnboardingCallback = () => {
         return;
       }
 
-      router.replace("/onboarding/persona");
+      router.replace("/onboarding/role");
     };
 
     handleCallback();

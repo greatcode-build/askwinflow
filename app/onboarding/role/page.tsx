@@ -1,9 +1,9 @@
-import { Persona } from "@/app/components/Persona";
+import { Role } from "@/app/components/Role";
 
 const page = () => {
   return (
     <div>
-      <Persona />
+      <Role />
     </div>
   );
 };

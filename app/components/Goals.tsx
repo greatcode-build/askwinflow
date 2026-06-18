@@ -109,7 +109,7 @@ const Goals = () => {
         <div className="flex justify-between pt-4">
           <button
             type="button"
-            onClick={() => router.push("/onboarding/persona")}
+            onClick={() => router.push("/onboarding/role")}
             className="px-4 flex items-center gap-2 py-2 rounded-md text-sm"
           >
             <ArrowLeft />
