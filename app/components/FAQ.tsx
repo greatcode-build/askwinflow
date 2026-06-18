@@ -1,15 +1,15 @@
 const FAQ = () => {
   return (
-    <section>
-      <div className="flex flex-col gap-2 items-center mt-20">
-        <h1 className="font-bold text-3xl">
-          <span className="text-[#008080]">Got Questions?</span>
-          <span className="text-[#A10F05]"> We’ve Got Answers</span>
+    <section className="bg-white px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto mt-14 flex max-w-7xl flex-col items-center gap-3 text-center sm:mt-20">
+        <h1 className="max-w-4xl text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
+          <span className="text-[#008080]">Got Questions?</span>{" "}
+          <span className="text-[#A10F05]">We’ve Got Answers</span>
         </h1>
-        <p className="max-w-3xl text-center text-lg leading-8 text-[#29292B]">
-          Everything you need to know about AskWinFlow from getting started
-          <br />
-          to advanced collaboration with experts
+
+        <p className="max-w-3xl text-base leading-7 text-[#29292B] sm:text-lg sm:leading-8">
+          Everything you need to know about AskWinFlow from getting started to
+          advanced collaboration with experts.
         </p>
       </div>
       <div className="space-y-2 m-5 pb-5">

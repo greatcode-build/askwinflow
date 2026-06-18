@@ -5,24 +5,26 @@ import { useRouter } from "next/navigation";
 
 const CTA = () => {
   const router = useRouter();
+
   return (
-    <section>
-      <div className="flex p-15 text-center flex-col gap-6 items-center mt-20 mb-15">
-        <h1 className="font-semibold text-3xl">
+    <section className="bg-white">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 px-4 py-14 text-center sm:px-6 sm:py-20 lg:px-8">
+        <h1 className="max-w-3xl text-2xl font-semibold text-[#111111] sm:text-3xl lg:text-4xl">
           Start Building Knowledge That Lasts
         </h1>
-        <p className="max-w-3xl text-center text-lg leading-7 text-[#29292B]">
+
+        <p className="max-w-3xl text-base leading-7 text-[#29292B] sm:text-lg">
           Join a community of professionals, educators, and experts sharing
-          insights, solving,
-          <br /> challenges, and transforming everyday discussions into a
-          searchable knowledge base.
+          insights, solving challenges, and transforming everyday discussions
+          into a searchable knowledge base.
         </p>
+
         <button
           onClick={() => router.push("/sign-up")}
-          className="flex text-sm items-center gap-2 bg-[#008080] text-[#FFF9F9] px-15 py-3 rounded-md font-semibold cursor-pointer"
+          className="inline-flex items-center gap-2 rounded-md bg-[#008080] px-8 py-3 text-sm font-semibold text-[#FFF9F9] transition hover:bg-[#006666] sm:px-12"
         >
           Get Started Free
-          <ArrowRight />
+          <ArrowRight size={20} />
         </button>
       </div>
     </section>
