@@ -27,15 +27,6 @@ export function middleware(request: NextRequest) {
   const accessTokenFromGoogle =
     searchParams.get("access_token") || searchParams.get("token");
 
-  /**
-   * Important:
-   * Google callback now lands on:
-   * /onboarding?access_token=...
-   * /feed?access_token=...
-   *
-   * At this point, the token is not yet in cookies.
-   * So middleware must allow the page to load first.
-   */
   if (
     accessTokenFromGoogle &&
     (pathname === "/onboarding" || pathname === "/feed")
