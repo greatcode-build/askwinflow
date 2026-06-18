@@ -7,22 +7,62 @@ import {
   saveTokensFromUrlHash,
 } from "@/app/lib/googleAuth";
 import { getToken } from "@/app/lib/auth";
+import { getProfile } from "@/services/profile.service";
+
+const getUserFromProfileResponse = (res: any) => {
+  return res?.data?.user || res?.data?.data?.user || res?.user || null;
+};
+
+const hasCompletedOnboarding = (user: any) => {
+  if (!user) return false;
+
+  const hasPersona = Boolean(user.persona);
+
+  const hasGoals = Array.isArray(user.goals) && user.goals.length > 0;
+
+  const hasTopics = Array.isArray(user.topics) && user.topics.length > 0;
+
+  return Boolean(
+    user.profile_completed ||
+    user.onboarding_completed ||
+    user.skipped_onboarding ||
+    (hasPersona && hasGoals && hasTopics),
+  );
+};
 
 export const OnboardingCallback = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const savedFromQuery = saveTokensFromSearchParams(searchParams);
-    const savedFromHash = saveTokensFromUrlHash();
-    const token = getToken();
+    const handleCallback = async () => {
+      const savedFromQuery = saveTokensFromSearchParams(searchParams);
+      const savedFromHash = saveTokensFromUrlHash();
+      const token = getToken();
 
-    if (!savedFromQuery && !savedFromHash && !token) {
-      router.replace("/sign-in");
-      return;
-    }
+      if (!savedFromQuery && !savedFromHash && !token) {
+        router.replace("/sign-in");
+        return;
+      }
 
-    router.replace("/onboarding/persona");
+      const profileRes = await getProfile();
+
+      if (!profileRes.success) {
+        router.replace("/onboarding/persona");
+        return;
+      }
+
+      const user = getUserFromProfileResponse(profileRes);
+
+      if (hasCompletedOnboarding(user)) {
+        router.replace("/feed");
+        return;
+      }
+
+      router.replace("/onboarding/persona");
+    };
+
+    handleCallback();
   }, [router, searchParams]);
 
   return (
