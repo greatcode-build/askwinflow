@@ -60,15 +60,15 @@ export const HowItWorksData: {
 
 export const interestOptions = [
   {
-    id: "tech_enthusiast",
-    title: "Tech Enthusiast",
-    description: "Product, Design, Engineering",
-    icon: "/cpu.png",
+    id: "professional",
+    title: "Professional",
+    description: "Manager, PM, HR, Consultant",
+    icon: "/brief_case.png",
   },
   {
     id: "educator",
     title: "Educator",
-    description: "Product, Design, Engineering",
+    description: "Lecture, Teacher, Trainer",
     icon: "/graduation_cap.png",
   },
   {
@@ -90,7 +90,7 @@ export const discussionsData = [
   },
   {
     id: 2,
-    name: "Kenneth Kelvin",
+    name: "Dan Smith",
     text: "Best practices for running async product discovery sprints?",
     image: "/image_2.png",
     comment: 40,
@@ -107,15 +107,23 @@ export const discussionsData = [
   {
     id: 4,
     name: "Kenneth Kelvin",
-    text: "Best practices for running async product discovery sprints?",
+    text: "Have you received feedback on your work that you're unsure how to address?",
     image: "/image_9.png",
     comment: 7,
     rating: 8,
   },
   {
     id: 5,
-    name: "Kelvin Park",
-    text: "Framework for prioritizing product features with limited eng capacity",
+    name: "Kelvin Dave",
+    text: "Do you face challenges integrating technology into teaching and learning?",
+    image: "/image_9.png",
+    comment: 400,
+    rating: 200,
+  },
+  {
+    id: 6,
+    name: "Sam Park",
+    text: "If you could get expert advice on one HR issue today, what would it be?",
     image: "/image_9.png",
     comment: 400,
     rating: 200,

@@ -219,13 +219,76 @@ const Feed = () => {
           </button>
         </div>
 
+        <div className="rounded-md pt-10 pb-10">
+          <Image src="/image_1.png" alt="feed" width={900} height={900} />
+        </div>
+
         <div className="flex items-center gap-2 mb-6">
           <Image src="/pulse.png" alt="pulse" width={20} height={20} />
           <h2 className="text-xl">Discussions based on community ratings</h2>
         </div>
 
         <div className="space-y-4">
-          {discussionsData.map((post) => (
+          {discussionsData.slice(0, 3).map((post) => (
+            <div
+              key={post.id}
+              className="bg-[#EEEEF0] p-5 rounded-xl border border-[#B4B4B699]"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <span className="bg-[#A2F0EF66] text-[#076969] border border-[#076969] text-xs px-2 py-1 rounded-md">
+                  Tech
+                </span>
+
+                <div className="flex items-center gap-1 text-sm text-gray-700">
+                  <Image src="/Clock.png" alt="clock" width={14} height={14} />
+                  <span>3 days ago</span>
+                </div>
+              </div>
+
+              <h3 className="text-lg font-semibold text-black mb-4">
+                {post.text}
+              </h3>
+
+              <div className="flex items-center gap-4">
+                <Image
+                  src={post.image}
+                  alt={post.name}
+                  width={30}
+                  height={30}
+                  className="rounded-full"
+                />
+
+                <p className="text-sm font-medium">{post.name}</p>
+
+                <div className="flex items-center gap-1">
+                  <Image
+                    src="/chat_tear_drop.png"
+                    alt="comments"
+                    width={16}
+                    height={16}
+                  />
+                  <span className="text-sm">{post.comment}</span>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <Image src="/star.png" alt="rating" width={16} height={16} />
+                  <span className="text-sm">{post.rating}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="rounded-md pt-10 pb-10">
+          <Image src="/frame_6.png" alt="feed" width={900} height={900} />
+        </div>
+        <div className="flex items-center gap-2 pb-5">
+          <Image src="/question.png" alt="feed" width={30} height={30} />
+          <h3 className="text-[#3A3A3C]">Share your thought</h3>
+        </div>
+
+        <div className="space-y-4">
+          {discussionsData.slice(-3).map((post) => (
             <div
               key={post.id}
               className="bg-[#EEEEF0] p-5 rounded-xl border border-[#B4B4B699]"
