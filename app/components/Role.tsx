@@ -19,7 +19,7 @@ const Role = () => {
     setSelected(id);
     setLoadingId(id);
 
-    const res = await updateProfile({ role: id });
+    const res = await updateProfile({ persona: id });
 
     setLoadingId(null);
 
