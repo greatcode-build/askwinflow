@@ -15,9 +15,9 @@ export const OnboardingCallback = () => {
   useEffect(() => {
     const savedFromQuery = saveTokensFromSearchParams(searchParams);
     const savedFromHash = saveTokensFromUrlHash();
-    const existingToken = getToken();
+    const token = getToken();
 
-    if (!savedFromQuery && !savedFromHash && !existingToken) {
+    if (!savedFromQuery && !savedFromHash && !token) {
       router.replace("/sign-in");
       return;
     }
