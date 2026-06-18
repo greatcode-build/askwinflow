@@ -1,10 +1,11 @@
+import { Suspense } from "react";
 import { Feed } from "../components/Feed";
 
 const page = () => {
   return (
-    <div>
+    <Suspense fallback={<div>Loading feed...</div>}>
       <Feed />
-    </div>
+    </Suspense>
   );
 };
 

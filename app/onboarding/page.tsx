@@ -1,27 +1,12 @@
-"use client";
+import { Suspense } from "react";
+import { OnboardingCallback } from "../components/OnboardingCallback";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { saveTokensFromUrlHash } from "@/app/lib/googleAuth";
-import { redirectAuthenticatedUser } from "@/app/lib/authRedirect";
-
-const OnboardingCallbackPage = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    const run = async () => {
-      saveTokensFromUrlHash();
-      await redirectAuthenticatedUser(router);
-    };
-
-    run();
-  }, [router]);
-
+const page = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      Preparing your onboarding...
-    </div>
+    <Suspense fallback={<div>Preparing your onboarding...</div>}>
+      <OnboardingCallback />
+    </Suspense>
   );
 };
 
-export default OnboardingCallbackPage;
+export default page;

@@ -1,18 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { discussionsData } from "@/constants";
 import Link from "next/link";
-import { useEffect } from "react";
 import { logout } from "@/services/auth.service";
 import { clearAuthTokens, getToken } from "@/app/lib/auth";
-import { saveTokensFromUrlHash } from "@/app/lib/googleAuth";
+import {
+  saveTokensFromSearchParams,
+  saveTokensFromUrlHash,
+} from "@/app/lib/googleAuth";
 
 const Feed = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [showMenu, setShowMenu] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
@@ -20,13 +23,19 @@ const Feed = () => {
   const [logoutError, setLogoutError] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedFromGoogle = saveTokensFromUrlHash();
+    const savedFromQuery = saveTokensFromSearchParams(searchParams);
+    const savedFromHash = saveTokensFromUrlHash();
     const token = getToken();
 
-    if (!savedFromGoogle && !token) {
+    if (!savedFromQuery && !savedFromHash && !token) {
       router.replace("/sign-in");
+      return;
     }
-  }, [router]);
+
+    if (savedFromQuery) {
+      router.replace("/feed");
+    }
+  }, [router, searchParams]);
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">

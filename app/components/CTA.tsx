@@ -7,7 +7,7 @@ const CTA = () => {
   const router = useRouter();
   return (
     <section>
-      <div className="flex bg-[#FFCDC233] p-15 text-center flex-col gap-6 items-center mt-20 mb-15">
+      <div className="flex p-15 text-center flex-col gap-6 items-center mt-20 mb-15">
         <h1 className="font-semibold text-3xl">
           Start Building Knowledge That Lasts
         </h1>

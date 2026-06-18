@@ -1,4 +1,23 @@
-import { setRefreshToken, setToken } from "./auth";
+import { setRefreshToken, setToken } from "@/app/lib/auth";
+
+type SearchParamsLike = {
+  get: (key: string) => string | null;
+};
+
+export const saveTokensFromSearchParams = (searchParams: SearchParamsLike) => {
+  const accessToken = searchParams.get("access_token");
+  const refreshToken = searchParams.get("refresh_token");
+
+  if (!accessToken) return false;
+
+  setToken(accessToken);
+
+  if (refreshToken) {
+    setRefreshToken(refreshToken);
+  }
+
+  return true;
+};
 
 export const saveTokensFromUrlHash = () => {
   if (typeof window === "undefined") return false;
