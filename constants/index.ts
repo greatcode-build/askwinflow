@@ -72,7 +72,7 @@ export const interestOptions = [
     icon: "/graduation_cap.png",
   },
   {
-    id: "tech",
+    id: "tech_enthusiast",
     title: "Tech Enthusiast",
     description: "Product, Design, Engineering",
     icon: "/cpu.png",
