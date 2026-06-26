@@ -22,23 +22,80 @@ const ERROR_MESSAGES: Record<string, string> = {
   SERVER_ERROR: "Something went wrong on our end. Please try again.",
 };
 
-const headersFromInit = (h?: HeadersInit) => {
-  if (!h) return {} as Record<string, string>;
-
-  if (h instanceof Headers) {
-    const obj: Record<string, string> = {};
-    h.forEach((v, k) => (obj[k] = v));
-    return obj;
-  }
-
-  if (Array.isArray(h)) {
-    return Object.fromEntries(h as [string, string][]);
-  }
-
-  return h as Record<string, string>;
+type ApiSuccessResponse<T = unknown> = {
+  success: true;
+  status: number;
+  data: T;
 };
 
-export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
+type ApiErrorResponse = {
+  success: false;
+  status: number;
+  code: string;
+  message: string;
+  data: unknown;
+};
+
+export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse;
+
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord => {
+  return typeof value === "object" && value !== null;
+};
+
+const getStringValue = (value: unknown): string | null => {
+  return typeof value === "string" ? value : null;
+};
+
+const getErrorCode = (json: unknown): string => {
+  if (!isRecord(json)) return "SERVER_ERROR";
+
+  const error = isRecord(json.error) ? json.error : null;
+
+  return (
+    getStringValue(error?.code) || getStringValue(json.code) || "SERVER_ERROR"
+  );
+};
+
+const getErrorMessage = (json: unknown): string | null => {
+  if (!isRecord(json)) return null;
+
+  const error = isRecord(json.error) ? json.error : null;
+
+  return getStringValue(error?.message) || getStringValue(json.message);
+};
+
+const getSuccessData = (json: unknown, fallbackText: string): unknown => {
+  if (!isRecord(json)) return json ?? fallbackText;
+
+  return json.data ?? json ?? fallbackText;
+};
+
+const headersFromInit = (headersInit?: HeadersInit): Record<string, string> => {
+  if (!headersInit) return {};
+
+  if (headersInit instanceof Headers) {
+    const headersObject: Record<string, string> = {};
+
+    headersInit.forEach((value, key) => {
+      headersObject[key] = value;
+    });
+
+    return headersObject;
+  }
+
+  if (Array.isArray(headersInit)) {
+    return Object.fromEntries(headersInit);
+  }
+
+  return headersInit;
+};
+
+export const apiFetch = async (
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<ApiResponse> => {
   const token = getToken();
   const incomingHeaders = headersFromInit(options.headers);
 
@@ -60,18 +117,21 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
       ...options,
       headers,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Network error";
+
     return {
       success: false,
       status: 0,
       code: "NETWORK_ERROR",
-      message: err?.message || "Network error",
+      message,
       data: null,
     };
   }
 
   const text = await res.text().catch(() => "");
-  let json: any = null;
+
+  let json: unknown = null;
 
   try {
     json = text ? JSON.parse(text) : null;
@@ -80,14 +140,19 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   }
 
   if (!res.ok) {
-    const code = json?.error?.code || json?.code || "SERVER_ERROR";
-    const backendMessage = json?.error?.message || json?.message;
+    const code = getErrorCode(json);
+    const backendMessage = getErrorMessage(json);
 
     return {
       success: false,
       status: res.status,
       code,
-      message: backendMessage || ERROR_MESSAGES[code] || text || res.statusText,
+      message:
+        backendMessage ||
+        ERROR_MESSAGES[code] ||
+        text ||
+        res.statusText ||
+        "Request failed",
       data: json ?? text,
     };
   }
@@ -95,6 +160,6 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   return {
     success: true,
     status: res.status,
-    data: json?.data ?? json ?? text,
+    data: getSuccessData(json, text),
   };
 };

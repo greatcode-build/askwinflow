@@ -13,23 +13,53 @@ type AuthFormProps = {
   type: "Sign In" | "Sign Up";
 };
 
-const getLoginToken = (res: any) => {
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord => {
+  return typeof value === "object" && value !== null;
+};
+
+const getStringValue = (value: unknown): string | null => {
+  return typeof value === "string" ? value : null;
+};
+
+const getLoginToken = (res: unknown): string | null => {
+  if (!isRecord(res)) return null;
+
+  const data = isRecord(res.data) ? res.data : null;
+  const nestedData = data && isRecord(data.data) ? data.data : null;
+
   return (
-    res?.token ||
-    res?.data?.token ||
-    res?.data?.data?.token ||
-    res?.data?.access_token ||
-    res?.data?.data?.access_token ||
+    getStringValue(res.token) ||
+    getStringValue(data?.token) ||
+    getStringValue(nestedData?.token) ||
+    getStringValue(data?.access_token) ||
+    getStringValue(nestedData?.access_token) ||
     null
   );
 };
 
-const getLoginUser = (res: any) => {
-  return res?.user || res?.data?.user || res?.data?.data?.user || null;
+const getLoginUser = (res: unknown): unknown | null => {
+  if (!isRecord(res)) return null;
+
+  const data = isRecord(res.data) ? res.data : null;
+  const nestedData = data && isRecord(data.data) ? data.data : null;
+
+  return res.user || data?.user || nestedData?.user || null;
 };
 
-const getGoogleUrl = (res: any) => {
-  return res?.url || res?.data?.url || res?.data?.data?.url || null;
+const getGoogleUrl = (res: unknown): string | null => {
+  if (!isRecord(res)) return null;
+
+  const data = isRecord(res.data) ? res.data : null;
+  const nestedData = data && isRecord(data.data) ? data.data : null;
+
+  return (
+    getStringValue(res.url) ||
+    getStringValue(data?.url) ||
+    getStringValue(nestedData?.url) ||
+    null
+  );
 };
 
 export const AuthForm = ({ type }: AuthFormProps) => {

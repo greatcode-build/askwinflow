@@ -1,18 +1,16 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { getProfile } from "@/services/profile.service";
-import { isUserOnboarded } from "@/services/profile.service";
+import {
+  getProfile,
+  getProfileUser,
+  isUserOnboarded,
+} from "@/services/profile.service";
 
 export const redirectAuthenticatedUser = async (
   router: AppRouterInstance,
-  fallbackUser?: any,
+  fallbackUser?: unknown,
 ) => {
-  if (fallbackUser) {
-    if (isUserOnboarded(fallbackUser)) {
-      router.replace("/feed");
-    } else {
-      router.replace("/onboarding/role");
-    }
-
+  if (fallbackUser && isUserOnboarded(fallbackUser)) {
+    router.replace("/feed");
     return;
   }
 
@@ -23,7 +21,7 @@ export const redirectAuthenticatedUser = async (
     return;
   }
 
-  const user = profile.data?.user;
+  const user = getProfileUser(profile);
 
   if (isUserOnboarded(user)) {
     router.replace("/feed");

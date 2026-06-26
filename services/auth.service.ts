@@ -1,20 +1,85 @@
 import { apiFetch } from "@/app/lib/fetcher";
 import { getToken } from "@/app/lib/auth";
 
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord => {
+  return typeof value === "object" && value !== null;
+};
+
+const getStringValue = (value: unknown): string | null => {
+  return typeof value === "string" ? value : null;
+};
+
+const getNestedData = (value: unknown): UnknownRecord | null => {
+  if (!isRecord(value)) return null;
+
+  const data = isRecord(value.data) ? value.data : null;
+
+  return data;
+};
+
+const extractToken = (res: unknown): string | null => {
+  if (!isRecord(res)) return null;
+
+  const data = getNestedData(res);
+  const nestedData = data && isRecord(data.data) ? data.data : null;
+
+  return (
+    getStringValue(res.token) ||
+    getStringValue(data?.token) ||
+    getStringValue(nestedData?.token) ||
+    getStringValue(data?.access_token) ||
+    getStringValue(nestedData?.access_token) ||
+    null
+  );
+};
+
+const extractUser = (res: unknown): unknown | null => {
+  if (!isRecord(res)) return null;
+
+  const data = getNestedData(res);
+  const nestedData = data && isRecord(data.data) ? data.data : null;
+
+  return res.user || data?.user || nestedData?.user || null;
+};
+
+const extractGoogleUrl = (res: unknown): string | null => {
+  if (!isRecord(res)) return null;
+
+  const data = getNestedData(res);
+  const nestedData = data && isRecord(data.data) ? data.data : null;
+
+  return (
+    getStringValue(res.url) ||
+    getStringValue(data?.url) ||
+    getStringValue(nestedData?.url) ||
+    null
+  );
+};
+
 export const login = async (email: string, password: string) => {
   const res = await apiFetch("auth/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
 
-  if (!res.success) return res;
+  if (!res.success) {
+    return {
+      ...res,
+      token: null,
+      user: null,
+    };
+  }
 
-  const token =
-    res.data?.token || res.data?.data?.token || res.data?.access_token || null;
+  const token = extractToken(res);
+  const user = extractUser(res);
 
-  const user = res.data?.user || res.data?.data?.user || null;
-
-  return { ...res, token, user };
+  return {
+    ...res,
+    token,
+    user,
+  };
 };
 
 export const register = async (payload: {
@@ -84,9 +149,14 @@ export const startGoogleAuth = async () => {
     method: "GET",
   });
 
-  if (!res.success) return res;
+  if (!res.success) {
+    return {
+      ...res,
+      url: null,
+    };
+  }
 
-  const url = res.data?.url || res.data?.data?.url;
+  const url = extractGoogleUrl(res);
 
   return {
     ...res,
