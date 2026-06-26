@@ -6,7 +6,7 @@
 
 ## What this project does
 
-AskWinFlow is a modern Next.js application for user authentication and onboarding. It provides:
+Ask WinFlow is a structured Q&A and Knowledge-sharing platform where professionals, educators and tech enthusiasts share and refine ideas through organized discussions. It supports threaded comments, voting, file attachments (PDFs, presentation links, images) and collaborative conversations.
 
 - Email/password and Google sign-in flows
 - Email verification, password reset, and session-based auth
