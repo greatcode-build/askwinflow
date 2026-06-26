@@ -12,6 +12,28 @@ type Option = {
   label: string;
 };
 
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord => {
+  return typeof value === "object" && value !== null;
+};
+
+const isOption = (value: unknown): value is Option => {
+  if (!isRecord(value)) return false;
+
+  return typeof value.id === "string" && typeof value.label === "string";
+};
+
+const extractTopics = (data: unknown): Option[] => {
+  if (!isRecord(data)) return [];
+
+  const topics = data.topics;
+
+  if (!Array.isArray(topics)) return [];
+
+  return topics.filter(isOption);
+};
+
 const Topics = () => {
   const [options, setOptions] = useState<Option[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
@@ -24,6 +46,7 @@ const Topics = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       setFetching(true);
+      setError(null);
 
       const res = await getTopics();
 
@@ -34,7 +57,8 @@ const Topics = () => {
         return;
       }
 
-      setOptions(res.data?.topics || []);
+      const topics = extractTopics(res.data);
+      setOptions(topics);
     };
 
     fetchTopics();
@@ -73,6 +97,7 @@ const Topics = () => {
           <h1 className="text-2xl font-semibold">
             Follow Relevant Communities or Topics
           </h1>
+
           <p className="text-lg text-[#5E5C5C]">
             Follow topics and communities to get you started with AskWinFlow
           </p>
@@ -102,6 +127,10 @@ const Topics = () => {
               );
             })}
           </div>
+        )}
+
+        {!fetching && options.length === 0 && !error && (
+          <p className="text-sm text-red-500">No topics found.</p>
         )}
 
         {error && <p className="text-sm text-red-500">{error}</p>}

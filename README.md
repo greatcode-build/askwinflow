@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AskWinFlow
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-16.2.7-black)
+![React](https://img.shields.io/badge/React-19.2.4-61DAFB)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4)
 
-First, run the development server:
+## What this project does
+
+AskWinFlow is a modern Next.js application for user authentication and onboarding. It provides:
+
+- Email/password and Google sign-in flows
+- Email verification, password reset, and session-based auth
+- Guided onboarding with role selection, goals, and topics
+- Protected user routes such as `/feed`, `/profile`, and `/onboarding`
+
+The front end is built with Next.js 16, React 19, TypeScript, Tailwind CSS, and a custom API integration layer.
+
+## Why AskWinFlow is useful
+
+AskWinFlow is useful for building user-centric web apps that need:
+
+- Fast auth setup with both email and third-party Google login
+- Clear onboarding flow for profile completion
+- User session management via cookies and middleware route protection
+- A polished marketing style landing page
+
+## Key features
+
+- Sign up and sign in pages with validation
+- Google authentication redirect support
+- Email verification flow (`/verify-email`)
+- Forgot password and reset password flows
+- Onboarding pages for `role`, `goals`, and `topics`
+- Protected routes using
+- API wrapper and error normalization
+
+## Getting started
+
+### Prerequisites
+
+- Node.js
+- npm
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Add environment variables
+
+Create a `.env.local` file and set at least:
+
+```env
+NEXT_PUBLIC_API_URL=https://your-api-url.example.com
+```
+
+### Run locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+- `app/` - main Next.js application entry points and routes
+- `app/components/` - reusable UI components and onboarding screens
+- `app/lib/` - client utilities for auth, API requests, and redirects
+- `services/` - service modules for auth, onboarding, and profile operations
+- `public/` - static assets used by the UI
+- `package.json` - project scripts and dependencies
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Common commands
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` - start the development server
+- `npm run build` - build the production app
+- `npm run start` - run the built app
+- `npm run lint` - run ESLint checks
 
-## Deploy on Vercel
+## How to use
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+After startup, use these routes for the main flows:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/` - landing page
+- `/sign-up` - create a new account
+- `/sign-in` - log in to an existing account
+- `/verify-email` - complete email verification
+- `/forgot-password` - request a password reset
+- `/reset-password` - reset a forgotten password
+- `/onboarding` - complete user onboarding
+- `/feed` - protected authenticated content
+- `/profile` - protected profile page

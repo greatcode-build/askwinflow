@@ -5,6 +5,30 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { resendVerificationEmail, verifyEmail } from "@/services/auth.service";
 import { setToken } from "@/app/lib/auth";
 
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord => {
+  return typeof value === "object" && value !== null;
+};
+
+const getStringValue = (value: unknown): string | null => {
+  return typeof value === "string" ? value : null;
+};
+
+const extractAuthToken = (data: unknown): string | null => {
+  if (!isRecord(data)) return null;
+
+  const nestedData = isRecord(data.data) ? data.data : null;
+
+  return (
+    getStringValue(data.token) ||
+    getStringValue(data.access_token) ||
+    getStringValue(nestedData?.token) ||
+    getStringValue(nestedData?.access_token) ||
+    null
+  );
+};
+
 export const VerifyEmail = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -45,7 +69,7 @@ export const VerifyEmail = () => {
         return;
       }
 
-      const authToken = res.data?.token || res.data?.access_token;
+      const authToken = extractAuthToken(res.data);
 
       if (authToken) {
         setToken(authToken);

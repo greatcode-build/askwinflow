@@ -12,6 +12,28 @@ type Option = {
   label: string;
 };
 
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord => {
+  return typeof value === "object" && value !== null;
+};
+
+const isOption = (value: unknown): value is Option => {
+  if (!isRecord(value)) return false;
+
+  return typeof value.id === "string" && typeof value.label === "string";
+};
+
+const extractGoals = (data: unknown): Option[] => {
+  if (!isRecord(data)) return [];
+
+  const goals = data.goals;
+
+  if (!Array.isArray(goals)) return [];
+
+  return goals.filter(isOption);
+};
+
 const Goals = () => {
   const [options, setOptions] = useState<Option[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
@@ -24,6 +46,7 @@ const Goals = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       setFetching(true);
+      setError(null);
 
       const res = await getGoals();
 
@@ -34,7 +57,8 @@ const Goals = () => {
         return;
       }
 
-      setOptions(res.data?.goals || []);
+      const goals = extractGoals(res.data);
+      setOptions(goals);
     };
 
     fetchGoals();
@@ -102,6 +126,10 @@ const Goals = () => {
               );
             })}
           </div>
+        )}
+
+        {!fetching && options.length === 0 && !error && (
+          <p className="text-sm text-red-500">No goals found.</p>
         )}
 
         {error && <p className="text-sm text-red-500">{error}</p>}
